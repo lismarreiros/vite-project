@@ -87,14 +87,14 @@ import { Stack, Typography, Card, Button, Box, Table, TableBody, TableCell, Tabl
   
     return (
   
-  <Box>
+  <Box sx={{ marginRight: 4}}>
       <NavBar/>
   
       {/*BOTÕES */}
       <Stack
       direction="row"
       spacing={2}
-      sx={{ marginTop: 10, marginLeft: 12 }}>
+      sx={{ marginTop: 10, marginLeft: 12, }}>
   
       <Button
       onClick={() => navigate('')}

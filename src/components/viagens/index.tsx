@@ -66,7 +66,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   color: '#7A7A7A'
 }));
 
-export default function Viagens() {
+export default function Viagens({}) {
   const[selectedMonths, setSelectedMonths] = useState<string[]>([]);
   const handleMonthButtonClick = (month: string) => {
     if (selectedMonths.includes(month)) {
@@ -130,6 +130,7 @@ export default function Viagens() {
 
 <Grid sx={{display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4, marginLeft: 12, marginBottom: 4}}>
   <Typography variant='subtitle1' color="text.secondary">Março de 2023</Typography>
+
     <CardViagem/>
     <CardViagem/>
     <CardViagem/>

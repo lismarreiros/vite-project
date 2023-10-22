@@ -128,7 +128,7 @@ const getSteps = (errors: string[]) => {
     });
 };
 
-export function Form() {
+ const Form = () => {
     const [output, setOutput] = useState('')
     const methods = useForm<FormValues>({
         resolver: zodResolver(schema),
@@ -167,9 +167,9 @@ export function Form() {
 
     return( 
         <FormProvider {...methods}>
-            <NavBar />
+            <NavBar/>
             <form onSubmit={methods.handleSubmit(createUser)}>
-                {window.innerWidth<=600? (
+                {window.innerWidth <=600 ? (
                     <StepsMobile items={steps}/>
                 ): (
                     <Steps items={steps}/>
@@ -179,3 +179,5 @@ export function Form() {
         </FormProvider>
     );
 }
+
+export default Form
