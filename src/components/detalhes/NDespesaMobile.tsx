@@ -5,6 +5,44 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ImageOutlined, RemoveCircle } from "@mui/icons-material";
 import { NavBar } from "../layouts/Navbar";
 import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { useState } from 'react';
+
+
+const schema = z.object({
+    descricaoDes: z.string().min(1, 'Descrição obrigatória')
+    .max(100)
+    .transform(cidade => {
+    return cidade.trim().split('').map(word => {
+    return word[0].toLocaleUpperCase().concat(word.substring(1))
+    }).join(' ')}),
+
+    dataDes: z.coerce.date({
+    errorMap: () => {
+    return {
+    message: 'Selecione uma data'
+    }}}),
+
+    valueDes: z.coerce.number({
+    errorMap: () => {
+    return {
+    message: 'Informe  um valor.'
+    }}})
+    .positive({message:'Digite um número válido'}),
+
+    imageDes: z.instanceof(FileList).transform(list => list.item(0)).optional(),
+
+    categoriaDes:  z.string({   
+    errorMap: () => {
+    return {
+    message: 'Selecione uma opção.'
+    }}}),
+
+}).required();
+
+type FormValuesDespesas =  z.infer<typeof schema>;
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -18,20 +56,38 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+
+
 const NDespesaMobile = () => {
+  const [output, setOutput] = useState('')
   const navigate = useNavigate();
-  return (
-  <div>
+  const methods = useForm<FormValuesDespesas>({
+    resolver: zodResolver(schema),
+    criteriaMode: "all",
+    mode: "all",
+    defaultValues: {
+    descricaoDes: "",
+    dataDes: undefined,
+    valueDes: undefined,
+    categoriaDes: ''
+    },
+    });
+    
+    function createDespesa(data:any) {
+    setOutput(JSON.stringify(data, null, 2))}
+  
+    return (
+  <FormProvider {...methods}>
    <NavBar/>
-   
+   <form onSubmit={methods.handleSubmit(createDespesa)}>
    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 1, marginTop: 3}}>
     <RemoveCircle/>
     <Typography id="modal-modal-title" variant="h6" component="h2">
     Nova Despesa
     </Typography>
    </Box>
-   
-  <FormControl
+
+   <FormControl
    sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 2, margin: 5}}>
       
    {/* INPUT DE TEXTO - DESCRIÇÃO */}
@@ -92,8 +148,12 @@ const NDespesaMobile = () => {
    Salvar
    </Button>
    </Box>
+ 
    </FormControl>
-</div>
+
+   <pre>{output}</pre>
+</form>
+</FormProvider>
    
 )}
 
