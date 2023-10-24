@@ -1,9 +1,32 @@
-import { Box, Grid, Button, Typography, styled, InputBase } from '@mui/material';
-import { NavBar } from '../layouts/Navbar';
+import { Box, Grid, Button, styled, Typography, InputBase } from '@mui/material';
 import { useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Search } from '@mui/icons-material';
 import CardViagem from './CardViagem';
+import { NavBar } from '../layouts/Navbar';
+import CardMobile from './CardMobile';
+
+
+const BoxTitle = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    marginTop: 25,
+    marginLeft: 10,
+    marginRight: 10 
+  }
+}));
+
+const GridButtons = styled(Grid)(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    display: 'none',
+  },
+}));
+
+const TypographyHistoric = styled(Typography)(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    display: 'none',
+  },
+}));
+
 
 {/* BUTTON DOS MESES */}
 const ButtonMonth = styled(Button)({
@@ -32,12 +55,12 @@ const SearchInput = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(3),
-    width: 'auto',
+    width: 'auto', 
+    marginRight: theme.spacing(2),
+
   },
 }));
 
@@ -99,14 +122,13 @@ export default function Viagens({}) {
   <NavBar />
 
 
-  <Box sx={{display:'flex', 
+  <BoxTitle sx={{display:'flex', 
   justifyContent: 'space-between',
   marginTop: 10,
   marginLeft: 12,
-  marginRight: 5   
-  }}>  
+  marginRight: 5 }}>  
   
-  <Typography variant="h5" sx={{color: '#3C3C3C', fontWeight: 500}}>Histórico</Typography>
+  <TypographyHistoric variant="h5" sx={{color: '#3C3C3C', fontWeight: 500, }}>Histórico</TypographyHistoric>
   <SearchInput>
     <SearchIconWrapper>
       <Search />
@@ -115,26 +137,30 @@ export default function Viagens({}) {
      placeholder="Pesquisar"
      inputProps={{ 'aria-label': 'search' }} />
     </SearchInput>
-  </Box>
+  </BoxTitle>
 
   {/* BOTÕES DE MESES -- FAZER A FILTRAGEM */}
-  <Grid 
+  <GridButtons
   container spacing={{ xs: 2, md: 3 }} 
   columns={{ xs: 2, sm: 8, md: 12 }}>
     <Grid  sx={{ marginLeft: 12}}
     item xs={2} sm={4} md={4}>
       {renderMonthButtons()}
     </Grid>
-</Grid>
+</GridButtons>
 
+  {window.innerWidth <=600 ? (
+      <Grid sx={{display: 'flex', flexDirection: 'column', margin: 2, gap: 2}}>
+      <Typography variant='subtitle2' color="text.secondary">Março de 2023</Typography>
+      <CardMobile />
+      </Grid>
+    ) : (
+      <Grid sx={{display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4, marginLeft: 12, marginBottom: 4}}>
+      <Typography variant='subtitle1' color="text.secondary">Março de 2023</Typography>
+      <CardViagem />
+      </Grid>
+    )}
 
-<Grid sx={{display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4, marginLeft: 12, marginBottom: 4}}>
-  <Typography variant='subtitle1' color="text.secondary">Março de 2023</Typography>
-
-    <CardViagem/>
-    <CardViagem/>
-    <CardViagem/>
-</Grid>
 
 </Box>
 

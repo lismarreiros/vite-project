@@ -87,7 +87,7 @@ import { Stack, Typography, Card, Button, Box, Table, TableBody, TableCell, Tabl
   
     return (
   
-  <Box sx={{ marginRight: 4}}>
+  <Box>
       <NavBar/>
   
       {/*BOTÕES */}

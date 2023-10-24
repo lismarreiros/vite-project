@@ -1,6 +1,7 @@
-import { Button, Box, Card, CardActions, CardContent, Typography } from '@mui/material';
-import { Visibility, LocationOn, SyncAlt, CalendarMonth } from '@mui/icons-material';
+import { Button, Box, Card, CardActions, CardContent, Typography, styled } from '@mui/material';
+import { Visibility, LocationOn, SyncAlt, CalendarMonth} from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
+
 
 export default function CardViagem() {
   const navigate = useNavigate();

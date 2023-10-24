@@ -52,34 +52,34 @@ export function StepsMobile({ items }: StepPropsMobile) {
     <Step sx={{color: 'white'}} key={label}>
     <StepLabel
     sx={{
-      '& .MuiStepLabel-labelContainer': {
-        color: 'white',
-      },
-      '& .MuiStepLabel-labelContainer.Mui-completed': {
-        color: '#7A7A7A'
-      },
-      '& .MuiStepIcon-root' : {
-        color: '#DADADA',
-      }, 
-      '& .MuiStepIcon-root.Mui-active': {
-        color: '#7A7A7A'
-      },
-      '& .MuiStepIcon-root.Mui-completed': {
-        color: '#4CAF50'
-      },
-      '& .MuiStepIcon-root.Mui-error': {
-        color: '#d32f2f'
-      },
-      '& MuiStepLabel-label.Mui-active' :{
-        color: '#FFFFFF'
-      }
-    }}
-    error={hasError}>
-    {label}
-    </StepLabel>
-    </Step>
-    );
-  })}
+    '& .MuiStepLabel-labelContainer': {
+    color: 'white',
+    },
+    '& .MuiStepLabel-labelContainer.Mui-completed': {
+    color: '#7A7A7A'
+    },
+    '& .MuiStepIcon-root' : {
+    color: '#DADADA',
+    }, 
+    '& .MuiStepIcon-root.Mui-active': {
+    color: '#7A7A7A'
+    },
+    '& .MuiStepIcon-root.Mui-completed': {
+     color: '#4CAF50'
+    },
+    '& .MuiStepIcon-root.Mui-error': {
+    color: '#d32f2f'
+    },
+    '& MuiStepLabel-label.Mui-active' :{
+    color: '#FFFFFF'
+    }
+  }}
+  error={hasError}>
+  {label}
+  </StepLabel>
+  </Step>
+  );
+})}
 
   </Stepper>
 
