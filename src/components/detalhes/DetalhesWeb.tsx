@@ -46,37 +46,37 @@ const [categories] = useState(["Alimentação", "Transporte", "Hotel", "Locomoç
 {/* ícones da categoria */}
 const getCategoryIcon = (category : string) => {
 switch (category) {
-    case "Alimentação":
-    return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
-    <Restaurant fontSize="small"/>
-    {category} 
-    </Box>;
+  case "Alimentação":
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
+  <Restaurant fontSize="small"/>
+  {category} 
+  </Box>;
         
-    case "Transporte":
-    return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
-    <DirectionsBus/>
-    {category}
-    </Box>;
-      
-    case "Hotel":
-    return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
-    <Hotel/>
-    {category}
-    </Box>;
+  case "Transporte":
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
+  <DirectionsBus/>
+  {category}
+  </Box>;
      
-    case "Locomoção":
-    return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}} >
-    <DirectionsCar/>
-    {category}
-    </Box>;
+  case "Hotel":
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
+  <Hotel/>
+  {category}
+  </Box>;
+     
+  case "Locomoção":
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}} >
+  <DirectionsCar/>
+  {category}
+  </Box>;
     
-    case "Outros":
-    return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
-    <Pending/>
-    {category}
-    </Box>;
-    }
-   };
+  case "Outros":
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
+  <Pending/>
+  {category}
+  </Box>;
+  }
+};
     
 {/* abrir o modal */}
 const [open, setOpen] = useState(false);
