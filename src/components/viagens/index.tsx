@@ -9,21 +9,21 @@ import CardMobile from './CardMobile';
 
 const BoxTitle = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    marginTop: 25,
-    marginLeft: 10,
-    marginRight: 10 
+  marginTop: 25,
+  marginLeft: 10,
+  marginRight: 10 
   }
 }));
 
 const GridButtons = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    display: 'none',
+  display: 'none',
   },
 }));
 
 const TypographyHistoric = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    display: 'none',
+  display: 'none',
   },
 }));
 
@@ -35,10 +35,10 @@ const ButtonMonth = styled(Button)({
   backgroundColor: '#FFFFFF',
   boxShadow: 'none',
   '&:hover': {
-    backgroundColor: '#CADCF8',
-    color:'#0065FF',
-    borderColor: '#0062cc',
-    boxShadow: 'none',
+  backgroundColor: '#CADCF8',
+  color:'#0065FF',
+  borderColor: '#0062cc',
+   boxShadow: 'none',
   },
 });
 
@@ -49,32 +49,30 @@ const months = [
 
 {/* BARRA DE PESQUISA */}
 const SearchInput = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: '#FBFBFB',
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto', 
-    marginRight: theme.spacing(2),
-
-  },
+position: 'relative',
+borderRadius: theme.shape.borderRadius,
+backgroundColor: '#FBFBFB',
+'&:hover': {
+backgroundColor: alpha(theme.palette.common.white, 0.25),
+},
+width: '100%',
+[theme.breakpoints.up('sm')]: {
+marginLeft: theme.spacing(3),
+width: 'auto', 
+marginRight: theme.spacing(2),
+},
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
+  padding: theme.spacing(1, 1, 1, 0),
+  // vertical padding + font size from searchIcon
+  paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+  transition: theme.transitions.create('width'),
+  width: '100%',
+  [theme.breakpoints.up('md')]: {
+  width: '20ch'},
   },
 }));
 
@@ -93,51 +91,48 @@ export default function Viagens({}) {
   const[selectedMonths, setSelectedMonths] = useState<string[]>([]);
   const handleMonthButtonClick = (month: string) => {
     if (selectedMonths.includes(month)) {
-      setSelectedMonths(selectedMonths.filter((item) => item !== month));
+    setSelectedMonths(selectedMonths.filter((item) => item !== month));
     } else {
-      setSelectedMonths([...selectedMonths, month]);
+    setSelectedMonths([...selectedMonths, month]);
     }
   };
 
   const renderMonthButtons = (): JSX.Element[] => {
-    return months.map((month) => (
-      <ButtonMonth
-        key={month}
-        onClick={() => handleMonthButtonClick(month)}
-        sx={{
-          backgroundColor: selectedMonths.includes(month) ? '#CADCF8' : '#FFFFFF',
-          color: selectedMonths.includes(month) ? '#0065FF' : '#7C7C8A',
-          variant: 'contained',
-          m: 1,
-        }}
-      >
-        {month.substr(0, 3).toUpperCase()}
-      </ButtonMonth>
+  return months.map((month) => (
+    <ButtonMonth
+     key={month}
+     onClick={() => handleMonthButtonClick(month)}
+     sx={{
+     backgroundColor: selectedMonths.includes(month) ? '#CADCF8' : '#FFFFFF',
+     color: selectedMonths.includes(month) ? '#0065FF' : '#7C7C8A',
+     variant: 'contained',
+     m: 1}}>
+    {month.substr(0, 3).toUpperCase()}
+    </ButtonMonth>
     ));
   };
-  return (
-
-  <Box sx={{ flexGrow: 1 }}>
-
-  <NavBar />
-
-
-  <BoxTitle sx={{display:'flex', 
-  justifyContent: 'space-between',
-  marginTop: 10,
-  marginLeft: 12,
-  marginRight: 5 }}>  
   
-  <TypographyHistoric variant="h5" sx={{color: '#3C3C3C', fontWeight: 500, }}>Histórico</TypographyHistoric>
-  <SearchInput>
+  return (
+  <Box sx={{ flexGrow: 1 }}>
+  <NavBar />
+  
+  {/* HISTÓRICO (TÍTULO) E SEARCH INPUT */}
+    <BoxTitle 
+    sx={{display:'flex', 
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginLeft: 12,
+    marginRight: 5 }}>  
+    <TypographyHistoric variant="h5" sx={{color: '#3C3C3C', fontWeight: 500, }}>Histórico</TypographyHistoric>
+    <SearchInput>
     <SearchIconWrapper>
-      <Search />
+    <Search />
     </SearchIconWrapper>
     <StyledInputBase
-     placeholder="Pesquisar"
-     inputProps={{ 'aria-label': 'search' }} />
+    placeholder="Pesquisar"
+    inputProps={{ 'aria-label': 'search' }} />
     </SearchInput>
-  </BoxTitle>
+    </BoxTitle>
 
   {/* BOTÕES DE MESES -- FAZER A FILTRAGEM */}
   <GridButtons
@@ -145,9 +140,11 @@ export default function Viagens({}) {
   columns={{ xs: 2, sm: 8, md: 12 }}>
     <Grid  sx={{ marginLeft: 12}}
     item xs={2} sm={4} md={4}>
-      {renderMonthButtons()}
+    {renderMonthButtons()}
     </Grid>
-</GridButtons>
+  </GridButtons>
+
+  {/* CARD DE VIAGENS */}
 
   {window.innerWidth <=600 ? (
       <Grid sx={{display: 'flex', flexDirection: 'column', margin: 2, gap: 2}}>
