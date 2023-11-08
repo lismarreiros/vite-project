@@ -32,7 +32,7 @@ return {
 message: 'Selecione uma data de volta'
 }}}), 
    
-category: z.string({   
+categoria: z.string({   
 errorMap: () => {
 return {
 message: 'Selecione uma opção.'
@@ -45,7 +45,7 @@ message: 'Informe  um valor.'
 }}})
 .positive({message:'Digite um número válido'}),
 
-imageTrans: z.instanceof(FileList).transform(list => list.item(0)),
+imagemTrans: z.instanceof(FileList).transform(list => list.item(0)),
 
 nomeHotel: z.string().min(1, {message: 'Informe um nome'}),
 
@@ -85,7 +85,7 @@ const sourceSteps = [{
  },
  {
  label: "Transporte",
- fields: ["valorTrans", "category", "imageTrans"],
+ fields: ["valorTrans", "categoria", "imagemTrans"],
  Component: <Transporte />,
  hasError: false,
  },
@@ -121,7 +121,7 @@ const getSteps = (errors: string[]) => {
   cidade: "",
   dataIda: undefined,
   dataVolta: undefined,
-  category: undefined,
+  categoria: undefined,
   valorTrans: undefined,
   nomeHotel: "",
   valorHotel: undefined,
