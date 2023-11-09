@@ -3,16 +3,14 @@ import { Button, Box, Stepper, StepLabel, Step }from '@mui/material/';
 
 
 type StepMobile = {
-    label: string;
-    Component: React.ReactNode;
-    hasError: boolean;
-
+  label: string;
+  Component: React.ReactNode;
+  hasError: boolean;
 };
 
 type StepPropsMobile = {
-    items: StepMobile[];
+  items: StepMobile[];
 };
-
 
 
 export function StepsMobile({ items }: StepPropsMobile) {
@@ -29,10 +27,10 @@ export function StepsMobile({ items }: StepPropsMobile) {
 
   const isLastStep = activeStep === items.length - 1;
 
-  return (
-  <Box>
+return (
+<Box>
   
-  <Stepper 
+<Stepper 
   sx={{ 
   marginTop: 0, 
   width: '100%',
@@ -40,12 +38,9 @@ export function StepsMobile({ items }: StepPropsMobile) {
   backgroundColor: '#0747A6',
   alignItems: 'center',
   color: 'white',
-  textDecorationColor: 'white',
-  
-  }} 
+  textDecorationColor: 'white' }} 
   activeStep={activeStep}
-  alternativeLabel
-  >
+  alternativeLabel>
 
   {items.map(({ label, hasError }) => {
     return (
@@ -68,7 +63,7 @@ export function StepsMobile({ items }: StepPropsMobile) {
      color: '#4CAF50'
     },
     '& .MuiStepIcon-root.Mui-error': {
-    color: '#d32f2f'
+    color: '#EE7070f'
     },
     '& MuiStepLabel-label.Mui-active' :{
     color: '#FFFFFF'
@@ -81,11 +76,11 @@ export function StepsMobile({ items }: StepPropsMobile) {
   );
 })}
 
-  </Stepper>
+</Stepper>
 
-  <Box  
+<Box  
   sx={{ width: 337,
-  height: 460,
+  height: 490,
   display: 'flex',
   alignItems: 'center',
   backgroundColor: 'white',
@@ -93,79 +88,73 @@ export function StepsMobile({ items }: StepPropsMobile) {
   boxShadow: 1,
   margin: "20px auto",
   marginTop: 10,
-  gap: 2,
-  
-  }}>
+  gap: 2 }}>
     
-  <Box 
+<Box 
   sx={{
   display: 'flex',
   flexDirection: 'column',
   paddingTop: 0,
-  padding: 2,
-  }}>
+  padding: 2 }}>
     
-  <Box 
+<Box 
   sx={{width: '299px', 
   height: '56', 
   alignItems:'center',
-  padding: '2px',
-  }}>
+  padding: '2px' }}>
   
-  {items[activeStep].Component}
+{items[activeStep].Component}
   
-  </Box>
+</Box>
   
 
-  <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 2,  marginBottom: 2}}>
-  <Box>
-  <Button
-  sx={{width: '120px', height: '39px', mr: 1, color: '#0065FF'}}
-  variant="outlined"
-  color="inherit"
-  disabled={activeStep === 0}
-  onClick={handleBack}
-  >
+<Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 2,  marginBottom: 2}}>
+<Box>
+<Button
+ sx={{width: '120px', height: '39px', mr: 1, color: '#0065FF'}}
+ variant="outlined"
+ color="inherit"
+ disabled={activeStep === 0}
+ onClick={handleBack} >
     
   Voltar
   
-  </Button>
-  </Box>
+</Button>
+</Box>
 
-  <Box>
-  {isLastStep ? (
-  <Button 
-  key="enviar" 
-  type="submit"
-  sx={{width: '120px', height: '39px', backgroundColor: "#0065FF", color: 'white'}}
-  >
+<Box>
+{isLastStep ? (
+<Button 
+ key="enviar" 
+ type="submit"
+ sx={{width: '120px', height: '39px', backgroundColor: "#0065FF", color: 'white'}} >
+ 
+ Enviar
   
-  Enviar
+</Button>
+
+) : (
   
-  </Button>
-  ) : (
-  
-  <Button 
-  sx={{width: '120px', height: '39px', backgroundColor: "#0065FF", color: 'white'}} 
-  key="proximo" 
-  type="button" 
-  onClick={handleNext}
-  variant="contained"
-  >
+<Button 
+ sx={{width: '120px', height: '39px', backgroundColor: "#0065FF", color: 'white'}} 
+ key="proximo" 
+ type="button" 
+ onClick={handleNext}
+ variant="contained" >
 
-  Continuar
+Continuar
 
-  </Button>
-  )}
-  </Box>
-  </Box>
+</Button>
+)}
 
-  </Box>
+</Box>
+</Box>
+
+</Box>
 
     
-  </Box>
+</Box>
+</Box>
 
-  </Box>
-
-  );
-  }
+);
+}

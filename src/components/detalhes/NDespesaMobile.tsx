@@ -47,23 +47,21 @@ const VisuallyHiddenInput = styled('input')({
 const NDespesaMobile = () => {
   const [output, setOutput] = useState('')
   const { control, 
-    handleSubmit, 
-    formState: { errors }} = useForm<FormValuesDespesas>({
-    resolver: zodResolver(schema),
-    criteriaMode: "all",
-    mode: "all",
-    defaultValues: {
-     descriptionDes: '',
-     dateDes: undefined,
-     valueDes: 0,
-     categorieDes: '',
-     imageDes: undefined,  
+   handleSubmit, 
+   formState: { errors }} = useForm<FormValuesDespesas>({
+   resolver: zodResolver(schema),
+   criteriaMode: "all",
+   mode: "all",
+   defaultValues: {
+   descriptionDes: '',
+   dateDes: undefined,
+   valueDes: 0,
+   categorieDes: '',
+   imageDes: undefined,  
   },
   })
   const navigate = useNavigate();
-
   const [uploadedImage, setUploadedImage] = useState(null);
-
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     // You can update the form state or save the image for later use.

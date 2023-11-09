@@ -1,6 +1,6 @@
 import { useMediaQuery } from '@mui/material';
 import { Box, TextField, InputAdornment, Radio, RadioGroup,  FormControl,
-        FormControlLabel, Button, IconButton, FormHelperText, styled } from "@mui/material";
+FormControlLabel, Button, IconButton, FormHelperText, styled } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -31,7 +31,7 @@ export const FormInput = ({ name, label, type, onChangeUploadImage }: FormInputP
   
   const { control } = useFormContext();
 
-  return (
+return (
   <Controller
   name={name}
   control={control}
