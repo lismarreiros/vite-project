@@ -1,10 +1,12 @@
 import { Box, Grid, Button, styled, Typography, InputBase } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Search } from '@mui/icons-material';
 import CardViagem from './CardViagem';
 import { NavBar } from '../layouts/Navbar';
 import CardMobile from './CardMobile';
+import { Enviroment } from '../../../shared/enviroment';
+import { ViagensService } from '../../../services/api/viagens/ViagensService';
 
 
 const BoxTitle = styled(Box)(({ theme }) => ({
@@ -87,7 +89,20 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   color: '#7A7A7A'
 }));
 
-export default function Viagens({}) {
+export default function Viagens() {
+
+  useEffect(() => {
+    ViagensService.getAll(1)
+    .then((result) => {
+      if (result instanceof Error) {
+        alert(result.message)
+        return;
+      } else {
+        console.log(result)
+      }
+    });  
+  }, []);
+
   const[selectedMonths, setSelectedMonths] = useState<string[]>([]);
   const handleMonthButtonClick = (month: string) => {
     if (selectedMonths.includes(month)) {
@@ -129,8 +144,8 @@ export default function Viagens({}) {
     <Search />
     </SearchIconWrapper>
     <StyledInputBase
-    placeholder="Pesquisar"
-    inputProps={{ 'aria-label': 'search' }} />
+      placeholder= { Enviroment.INPUT_DE_BUSCA }
+      inputProps={{ 'aria-label': 'search' }} />
     </SearchInput>
     </BoxTitle>
 
