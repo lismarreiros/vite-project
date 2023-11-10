@@ -2,7 +2,7 @@ import { Box, Typography, TextField, Button, styled, InputLabel, AppBar } from '
 import { Link } from 'react-router-dom';
 
 
-const Signup = () => {
+const Cadastrar = () => {
  const BoxSignup = styled(Box)(({ theme }) => ({
  [theme.breakpoints.down('sm')]: {
  width: '305px',
@@ -70,5 +70,5 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Cadastrar
 
