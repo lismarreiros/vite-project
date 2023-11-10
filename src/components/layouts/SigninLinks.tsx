@@ -12,7 +12,7 @@ import { useAuthContext } from "../../../shared/contexts";
   
   
   return (
-  <AppBar sx={{backgroundColor: '#0747A6', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} position='sticky'>
+  <AppBar sx={{backgroundColor: '#0747A6', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', boxShadow: 0 }} position='sticky'>
       
 {/* Botão de Mostrar todas as viagens*/}
   <Toolbar>

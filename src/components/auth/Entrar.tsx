@@ -11,6 +11,7 @@ const loginSchema = z.object({
   senha: z.string().min(6, 'A senha precisa ter pelo menos 6 caracteres')
 }).required()
 
+type handleLoginFormData = z.infer<typeof loginSchema>;
 
 interface ILoginProps {
  children: React.ReactNode;
@@ -37,13 +38,14 @@ const TextFieldLogin = styled(TextField)(({ theme }) => ({
 }));
 
 export const Entrar: React.FC<ILoginProps>= ({ children }) => {
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm<handleLoginFormData>({
     resolver: zodResolver(loginSchema)
   });
   const { isAuthenticated, login } = useAuthContext();
 
-  function handleLogin(data) {
-    login('email', 'senha')
+  function handleLogin(data: handleLoginFormData) {
+    const { email, senha } = data
+    login(email, senha)
   }
 
   if (isAuthenticated) return (
@@ -66,7 +68,8 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
           label="E-mail"
           type='email'
           {...register('email')}
-        ></TextFieldLogin>
+        ></TextFieldLogin> 
+        {errors.email && <span>{errors.email.message}</span>}
       </InputLabel>
 
    
@@ -75,11 +78,12 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
           type='password'
           {...register('senha')}
         ></TextFieldLogin>
+         {errors.senha && <span>{errors.senha.message}</span>}
       </InputLabel>
     
    
       <Button
-        onClick={() => login('email', 'senha')}
+        type='submit'
         sx={{backgroundColor: '#0065FF', color: '#FFFFFF', width: '126px', height: '56px', alignSelf: 'center'}}> Entrar </Button>
       
       <Typography sx={{ textAlign: 'center' }}variant='body2'>Ainda não possui uma conta? <Link to="/signup">Cadastre-se</Link></Typography>
