@@ -5,8 +5,10 @@ import { Search } from '@mui/icons-material';
 import CardViagem from './CardViagem';
 import { NavBar } from '../layouts/Navbar';
 import CardMobile from './CardMobile';
-import { Enviroment } from '../../../shared/enviroment';
 import { ViagensService } from '../../../services/api/viagens/ViagensService';
+import { useSearchParams } from 'react-router-dom';
+import { useMemo } from 'react';
+import { useDebounce } from '../../../shared/hooks/UseDebounce';
 
 
 const BoxTitle = styled(Box)(({ theme }) => ({
@@ -51,18 +53,18 @@ const months = [
 
 {/* BARRA DE PESQUISA */}
 const SearchInput = styled('div')(({ theme }) => ({
-position: 'relative',
-borderRadius: theme.shape.borderRadius,
-backgroundColor: '#FBFBFB',
-'&:hover': {
-backgroundColor: alpha(theme.palette.common.white, 0.25),
-},
-width: '100%',
-[theme.breakpoints.up('sm')]: {
-marginLeft: theme.spacing(3),
-width: 'auto', 
-marginRight: theme.spacing(2),
-},
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: '#FBFBFB',
+  '&:hover': {
+  backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+  marginLeft: theme.spacing(3),
+  width: 'auto', 
+  marginRight: theme.spacing(2),
+  },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -90,18 +92,29 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 }));
 
 export default function Viagens() {
+  const [ searchParams, setSearchParams ] = useSearchParams();
+  const { debounce } = useDebounce(3000, false);
+
+  const busca = useMemo(() => {
+    return searchParams.get('busca') || '';
+  }, [searchParams]);
 
   useEffect(() => {
-    ViagensService.getAll(1)
-    .then((result) => {
-      if (result instanceof Error) {
-        alert(result.message)
-        return;
-      } else {
-        console.log(result)
-      }
-    });  
-  }, []);
+    
+    debounce(() => {
+      ViagensService.getAll(1, busca)
+      .then((result) => {
+        if (result instanceof Error) {
+          alert(result.message)
+          return;
+        } else {
+          console.log(result)
+        }
+      });  
+    });
+   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busca]);
 
   const[selectedMonths, setSelectedMonths] = useState<string[]>([]);
   const handleMonthButtonClick = (month: string) => {
@@ -144,8 +157,9 @@ export default function Viagens() {
     <Search />
     </SearchIconWrapper>
     <StyledInputBase
-      placeholder= { Enviroment.INPUT_DE_BUSCA }
-      inputProps={{ 'aria-label': 'search' }} />
+      placeholder= {busca}
+      onChange={(e) => setSearchParams({ busca: e.target.value }, {replace: true})}
+       />
     </SearchInput>
     </BoxTitle>
 
