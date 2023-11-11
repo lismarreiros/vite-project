@@ -1,4 +1,4 @@
-import { Box, Grid, Button, styled, Typography, InputBase } from '@mui/material';
+import { Box, Grid, Button, styled, Typography, InputBase, LinearProgress } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { Search } from '@mui/icons-material';
 
@@ -141,21 +141,15 @@ export default function Viagens() {
           alert(result.message)
           return;
         } else {
-          let filteredTrips = result.data
-          if (selectedMonths.length > 0) {
-            filteredTrips = filteredTrips.filter((trip) => 
-            selectedMonths.includes(months[new Date(trip.dataIda).getMonth()])
-            );
-          }
-
-          setCard(filteredTrips);
-          setTotalCount(filteredTrips.length);
+          console.log(result)
+          setTotalCount(result.totalCount)
+          setCard(result.data)
         }
       });  
     });
    
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [busca]);
 
 
   
@@ -204,16 +198,24 @@ export default function Viagens() {
       </Grid>
     
     ) : (
-    
+
+    <>    
+      
       <Grid sx={{display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4, marginLeft: 12, marginBottom: 4}}>
-        
-        <Typography variant='subtitle1' color="text.secondary">Março de 2023</Typography>
-      
-        <CardViagem />
-      
+   
+          <Typography variant='subtitle2' color="text.secondary">
+          Total: {totalCount}
+          </Typography>  
+          <CardViagem/>
+  
       </Grid>
-    
+     
+      </>
+
     )}
+
+    <footer>{ isLoading && 
+    <LinearProgress variant='indeterminate' /> }</footer>
 
 
 </Box>
