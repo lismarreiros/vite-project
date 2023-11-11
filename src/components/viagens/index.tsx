@@ -1,14 +1,16 @@
 import { Box, Grid, Button, styled, Typography, InputBase } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Search } from '@mui/icons-material';
-import CardViagem from './CardViagem';
-import { NavBar } from '../layouts/Navbar';
-import CardMobile from './CardMobile';
-import { ViagensService } from '../../../services/api/viagens/ViagensService';
+
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMemo } from 'react';
+
+import { ViagensService, IListagemViagem } from '../../../services/api/viagens/ViagensService';
 import { useDebounce } from '../../../shared/hooks/UseDebounce';
+import CardMobile from './CardMobile';
+import CardViagem from './CardViagem';
+import { NavBar } from '../layouts/Navbar';
 
 
 const BoxTitle = styled(Box)(({ theme }) => ({
@@ -93,28 +95,15 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 export default function Viagens() {
   const [ searchParams, setSearchParams ] = useSearchParams();
-  const { debounce } = useDebounce(3000, false);
+  const { debounce } = useDebounce();
+
+  const [card, setCard] = useState<IListagemViagem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
 
   const busca = useMemo(() => {
     return searchParams.get('busca') || '';
   }, [searchParams]);
-
-  useEffect(() => {
-    
-    debounce(() => {
-      ViagensService.getAll(1, busca)
-      .then((result) => {
-        if (result instanceof Error) {
-          alert(result.message)
-          return;
-        } else {
-          console.log(result)
-        }
-      });  
-    });
-   
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [busca]);
 
   const[selectedMonths, setSelectedMonths] = useState<string[]>([]);
   const handleMonthButtonClick = (month: string) => {
@@ -139,52 +128,91 @@ export default function Viagens() {
     </ButtonMonth>
     ));
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    
+    debounce(() => {
+      ViagensService.getAll(1, busca)
+      .then((result) => {
+        setIsLoading(false);
+
+        if (result instanceof Error) {
+          alert(result.message)
+          return;
+        } else {
+          let filteredTrips = result.data
+          if (selectedMonths.length > 0) {
+            filteredTrips = filteredTrips.filter((trip) => 
+            selectedMonths.includes(months[new Date(trip.dataIda).getMonth()])
+            );
+          }
+
+          setCard(filteredTrips);
+          setTotalCount(filteredTrips.length);
+        }
+      });  
+    });
+   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
   
   return (
   <Box sx={{ flexGrow: 1 }}>
   <NavBar />
   
   {/* HISTÓRICO (TÍTULO) E SEARCH INPUT */}
-    <BoxTitle 
-    sx={{display:'flex', 
-    justifyContent: 'space-between',
-    marginTop: 10,
-    marginLeft: 12,
-    marginRight: 5 }}>  
-    <TypographyHistoric variant="h5" sx={{color: '#3C3C3C', fontWeight: 500, }}>Histórico</TypographyHistoric>
-    <SearchInput>
-    <SearchIconWrapper>
-    <Search />
-    </SearchIconWrapper>
-    <StyledInputBase
-      placeholder= {busca}
-      onChange={(e) => setSearchParams({ busca: e.target.value }, {replace: true})}
-       />
-    </SearchInput>
+    <BoxTitle sx={{display:'flex', justifyContent: 'space-between', marginTop: 10, marginLeft: 12, marginRight: 5 }}>
+
+      <TypographyHistoric variant="h5" sx={{color: '#3C3C3C', fontWeight: 500, }}>Histórico</TypographyHistoric>
+      
+      <SearchInput>
+        <SearchIconWrapper>
+          <Search />
+        </SearchIconWrapper>
+        <StyledInputBase 
+        placeholder= {busca}
+        onChange={(e) => setSearchParams({ busca: e.target.value }, {replace: true})}
+        />
+      </SearchInput>
+    
     </BoxTitle>
 
   {/* BOTÕES DE MESES -- FAZER A FILTRAGEM */}
-  <GridButtons
-  container spacing={{ xs: 2, md: 3 }} 
-  columns={{ xs: 2, sm: 8, md: 12 }}>
-    <Grid  sx={{ marginLeft: 12}}
-    item xs={2} sm={4} md={4}>
-    {renderMonthButtons()}
+  <GridButtons container spacing={{ xs: 2, md: 3 }} columns={{ xs: 2, sm: 8, md: 12 }}>
+    
+    <Grid  sx={{ marginLeft: 12}} item xs={2} sm={4} md={4}>
+
+      {renderMonthButtons()}
+    
     </Grid>
+  
   </GridButtons>
 
-  {/* CARD DE VIAGENS */}
+  {/* CARD DE VIAGENS MOBILE E WEB */}
 
   {window.innerWidth <=600 ? (
+  
       <Grid sx={{display: 'flex', flexDirection: 'column', margin: 2, gap: 2}}>
-      <Typography variant='subtitle2' color="text.secondary">Março de 2023</Typography>
-      <CardMobile />
+  
+        <Typography variant='subtitle2' color="text.secondary">Março de 2023</Typography>
+    
+        <CardMobile />
+
       </Grid>
+    
     ) : (
+    
       <Grid sx={{display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4, marginLeft: 12, marginBottom: 4}}>
-      <Typography variant='subtitle1' color="text.secondary">Março de 2023</Typography>
-      <CardViagem />
+        
+        <Typography variant='subtitle1' color="text.secondary">Março de 2023</Typography>
+      
+        <CardViagem />
+      
       </Grid>
+    
     )}
 
 

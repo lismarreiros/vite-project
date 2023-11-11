@@ -69,12 +69,6 @@ const DetalhesMobile = () => {
     spacing={2}
     sx={{ marginTop: 7, justifyContent: 'center' }}>
  
-    <IconButton
-    onClick={() => navigate('')}
-    size="small" 
-    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
-    <EditNoteOutlined/></IconButton>
-     
     <IconButton 
     onClick={() => navigate('')}
     size="small" 

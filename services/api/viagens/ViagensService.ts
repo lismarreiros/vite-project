@@ -1,7 +1,7 @@
 import { Enviroment } from '../../../shared/enviroment';
 import { Api } from '../axios-config';
 
-interface IListagemViagem {
+export interface IListagemViagem {
     id: number;
     cidade: string;
     dataIda: Date;
@@ -14,7 +14,7 @@ interface IListagemViagem {
     adiantData: Date;
 }
 
-interface IDetalheViagem {
+export interface IDetalheViagem {
     id: number;
     cidade: string;
     dataIda: Date;

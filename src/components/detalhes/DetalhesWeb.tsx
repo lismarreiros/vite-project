@@ -92,12 +92,6 @@ return (
    direction="row"
    spacing={2}
    sx={{ marginTop: 10, marginLeft: 12, }}>
-
-   <Button
-   onClick={() => navigate('')}
-   size="medium" 
-   sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
-   startIcon={<EditNoteOutlined />}>Editar</Button>
     
    <Button 
    onClick={() => navigate('')}
