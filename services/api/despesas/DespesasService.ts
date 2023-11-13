@@ -18,7 +18,7 @@ type TDespesasComTotalCount = {
 
 const getAll = async (page = 1, filter= ''): Promise<TDespesasComTotalCount| Error> => {
     try {
-        const urlRelativa = `/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
+        const urlRelativa = `:id/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
         
         const { data, headers } = await Api.get(urlRelativa);
 
@@ -38,7 +38,7 @@ const getAll = async (page = 1, filter= ''): Promise<TDespesasComTotalCount| Err
 
 const getById = async (id: number): Promise<TDespesasComTotalCount | Error> => {
     try {
-        const { data } = await Api.get(`/despesas/${id}`)
+        const { data } = await Api.get(`:id/despesas/${id}`)
         
         if (data) {
             return data;
@@ -53,7 +53,7 @@ const getById = async (id: number): Promise<TDespesasComTotalCount | Error> => {
 
 const create = async (dados: Omit<IListagemDespesas, 'id'>): Promise<number | Error> => {
     try {
-        const { data } = await Api.post<IListagemDespesas>(`/despesas/`, dados);
+        const { data } = await Api.post<IListagemDespesas>(`:id/despesas/`, dados);
         
         if (data) {
           return data.id;
@@ -68,7 +68,7 @@ const create = async (dados: Omit<IListagemDespesas, 'id'>): Promise<number | Er
 
 const updateById = async (id: number, dados: IListagemDespesas): Promise<void | Error> => {
     try {
-        await Api.put(`/despesas/${id}`, dados)
+        await Api.put(`:id/despesas/${id}`, dados)
     } catch (error) {
         console.error(error);
         return new Error((error as { message: string }).message || 'Erro ao atualizar os registros.')
@@ -77,7 +77,7 @@ const updateById = async (id: number, dados: IListagemDespesas): Promise<void | 
 
 const deletebyId = async (id: number): Promise<void | Error> => {
     try {
-        await Api.delete(`/despesas/${id}`)
+        await Api.delete(`:id/despesas/${id}`)
     } catch (error) {
         console.error(error);
         return new Error((error as { message: string }).message || 'Erro ao deletar os registros.')

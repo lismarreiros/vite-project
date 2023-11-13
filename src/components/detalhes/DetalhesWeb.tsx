@@ -1,13 +1,16 @@
 import { Stack, Typography, Card, Button, Box, Table, TableBody, TableCell, TableContainer, TableRow, TableHead,
-CardContent, IconButton, Modal, Divider } from "@mui/material";
+CardContent, IconButton, Modal, Divider, TableFooter, LinearProgress } from "@mui/material";
 import { DeleteOutline, LocalPrintshopOutlined, ShareOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pending, Payments } from '@mui/icons-material';
 
 
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-import { ViagensService } from "../../../services/api/viagens/ViagensService";
+import { useDebounce } from "../../../shared/hooks/UseDebounce";
+import { ViagensService, IListagemViagem } from "../../../services/api/viagens/ViagensService";
+import { DespesasService, IListagemDespesas } from "../../../services/api/despesas/DespesasService"
 import NovaDespesaForm from './NovaDespesa';  
 import { NavBar } from "../layouts/Navbar";
 
@@ -29,89 +32,91 @@ p: 4,
 
 export default function DetalhesWeb () {
 const navigate = useNavigate();
+const { debounce } = useDebounce();
 const { id = 'nova' } = useParams<'id'>();
-const [viagemDetalhes, setViagemDetalhes] = useState({});
-const [categories] = useState(["Alimentação", "Transporte", "Hotel", "Locomoção", "Outros"])
+const [rows, setRows] = useState<IListagemDespesas[]>([]);
+const [card, setCard] = useState<IListagemViagem[]>();
+//const [categories] = useState(["Alimentação", "Transporte", "Hotel", "Locomoção", "Outros"])
+const [totalCount, setTotalCount] = useState(0);
+const [isLoading, setIsLoading] = useState(true);
 
 useEffect(() => {
-  ViagensService.getById(Number(id))
+  setIsLoading(true);
+  
+  debounce(() => {
+    ViagensService.getById(Number(id))
     .then((result) => {
+      setIsLoading(false);
+
       if (result instanceof Error) {
-        alert(result.message);
-        navigate('/viagens');
+        alert(result.message)
+        navigate('/viagens')
       } else {
-        setViagemDetalhes(result); // Assumindo que a resposta contém os detalhes da viagem
+        console.log(result)
+        setCard(result.data);
       }
-    });
+    });  
+  });
+ 
 // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [id]);
 
+useEffect(() => {
+  setIsLoading(true);
 
-const handleDelete = (id: number) => {
-  if (confirm('Realmente deseja apagar?')) {
-    ViagensService.deletebyId(id)
-    .then(result => {
-      if (result instanceof Error) {
-       alert(result.message)
+  debounce(() => {
+  DespesasService.getAll()
+    .then((result) => {
+     setIsLoading(false);
+
+     if (result instanceof Error) {
+      alert(result.message);
       } else {
-       alert('Registro apagado com sucesso')
-     }
-    });
-  }
-}
+      console.log(result);
 
-  function createData(
-  description: string,
-  date: string,
-  category: string,
-  value: number,
-  attachments: string[],
-  ) {
-  return { description, date, category, value, attachments };
-  }
-    
-  const rows = [
-  createData('Café da Manhã', '11/02/2002', categories[0], 24.56, []),
-  createData('Passagens', '11/02/2002', categories[1], 24.50, []),
-  createData('3 Diárias', '11/02/2002', categories[2], 24.50, []),
-  createData('Uber', '11/02/2002', categories[3], 24.50, []),
-  createData('Ingresso', '11/02/2002', categories[4], 24.50, []),
- ];
+      setTotalCount(result.totalCount);
+      setRows(result.data);
+      }
+    });
+  });
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
 
 {/* ícones da categoria */}
-const getCategoryIcon = (category : string) => {
-switch (category) {
-  case "Alimentação":
-  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
-  <Restaurant fontSize="small"/>
-  {category} 
-  </Box>;
+//const getCategoryIcon = (category : string) => {
+//switch (category) {
+//  case "Alimentação":
+//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
+//  <Restaurant fontSize="small"/>
+//  {category} 
+//  </Box>;
         
-  case "Transporte":
-  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
-  <DirectionsBus/>
-  {category}
-  </Box>;
+//  case "Transporte":
+//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
+//  <DirectionsBus/>
+//  {category}
+//  </Box>;
      
-  case "Hotel":
-  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
-  <Hotel/>
-  {category}
-  </Box>;
+//  case "Hotel":
+//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
+//  <Hotel/>
+//  {category}
+//  </Box>;
      
-  case "Locomoção":
-  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}} >
-  <DirectionsCar/>
-  {category}
-  </Box>;
+//  case "Locomoção":
+//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}} >
+//  <DirectionsCar/>
+// {category}
+//  </Box>;
     
-  case "Outros":
-  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
-  <Pending/>
-  {category}
-  </Box>;
-  }
-};
+//  case "Outros":
+//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
+//  <Pending/>
+//  {category}
+//  </Box>;
+//  }
+//};
     
 {/* abrir o modal */}
 const [open, setOpen] = useState(false);
@@ -144,7 +149,6 @@ return (
    onClick={() => navigate('/viagens')}
    size="medium" 
    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
-   onClickCapture={() => handleDelete}
    startIcon={<DeleteOutline />}>Deletar</Button>
     
    </Stack>
@@ -154,16 +158,18 @@ return (
    sx={{ marginLeft: 12, 
    marginTop: 5, 
    fontWeight: 'bold', 
-   color: '#3C3C3C'}}>Detalhes da Viagem #{id}</Typography>
+   color: '#3C3C3C'}}>Detalhes da Viagem # {id}</Typography>
     
    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 14}}>
 
    {/* DETALHES FORNECIDOS PELO FORMULÁRIO */}
     <>
+    
   <Card sx={{ width: '460px', height: '500px', marginLeft: 12, marginTop: 2, backgroundColor: '#F5F5F6', boxShadow: 'none'}}>
    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 4, padding: 3}}>
 
    {/* DESTINO */}
+
    <Box sx={{ display:'flex', flexDirection:'column'}}>
      <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, alignItems: 'center'}}>
      <FmdGoodOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
@@ -171,12 +177,13 @@ return (
      </Box>
      <Typography sx={{ fontWeight: 500}}></Typography>
     </Box>
-
+ 
 
    {/* DATA DE IDA */}
    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 5}}>
  
    <Box sx={{ display:'flex', flexDirection:'column'}}>
+
     <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, alignItems: 'center'}}>
      <CalendarMonthOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
      <Typography variant="subtitle1" color="text.secondary">Data de Ida</Typography>
@@ -217,7 +224,7 @@ return (
       <RemoveCircle fontSize="small" sx={{color:'#7C7C8A'}}/>
       <Typography variant="subtitle1" color="text.secondary">Total dos Custos</Typography>
       </Box>
-      <Typography sx={{ fontWeight: 500}}>R$ 789,99</Typography>
+      <Typography sx={{ fontWeight: 500}}>{totalCount}</Typography>
     </Box>
 
   </Box>
@@ -280,9 +287,9 @@ return (
 
     <TableBody>
    
-    {rows.map((row) => (
+    {rows.map((row => (
     <TableRow
-    key={row.description}
+    key={row.descricao}
     sx={{ '&:last-child td, &:last-child th': { border: 0 }, 
     backgroundColor:'#FFFFFF', 
     boxShadow: 0.75, 
@@ -298,18 +305,27 @@ return (
     <RemoveCircle/>
     </IconButton>
     </TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} component="th" scope="row">{row.description}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left">{row.date}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left">{getCategoryIcon(row.category)}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left">R$ {row.value}</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} component="th" scope="row">{row.descricao}</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left">{row.data.toLocaleString()}</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left">{row.categoriaId}</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left">R$ {row.valor}</TableCell>
     <TableCell sx={{ color: '#8D8D99'}} align="left">
     <IconButton
     sx={{ backgroundColor: '#CADCF8', color: '#0065FF'}}
     >  
-    <AttachFile/>{row.attachments}</IconButton></TableCell>
+    <AttachFile/></IconButton></TableCell>
     </TableRow>
-    ))}
+    )))}
     </TableBody>
+    <TableFooter>
+    {isLoading && (
+       <TableRow>
+       <TableCell colSpan={6}>
+         <LinearProgress variant='indeterminate' />
+       </TableCell>
+        </TableRow>
+     )}
+    </TableFooter>
 </Table>
 </TableContainer>
 </Box>
