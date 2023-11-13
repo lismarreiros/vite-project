@@ -13,20 +13,23 @@ const CardM = styled(Card)(() => ({
     justifyContent: 'space-between'
   }));
   
-
-export default function CardMobile() {
+  interface CardViagemProps {
+    viagem: IListagemViagem;
+  }
+  
+export default function CardMobile({ viagem }: CardViagemProps) {
   const navigate = useNavigate();
   const { debounce } = useDebounce();
 
   const [card, setCard] = useState<IListagemViagem[]>([]);  
   const [isLoading, setIsLoading] = useState(true);
-  const [totalCount, setTotalCount] = useState(0);
+ 
 
   useEffect(() => {
     setIsLoading(true);
     
     debounce(() => {
-      ViagensService.getAll(1)
+      ViagensService.getById(viagem.id)
       .then((result) => {
         setIsLoading(false);
 
@@ -35,20 +38,18 @@ export default function CardMobile() {
           return;
         } else {
           console.log(result)
-
           setCard(result.data);
-          setTotalCount(result.totalCount);
         }
       });  
     });
    
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [viagem.id]);
 
   return (
     <>
-  {card.map((trip) => (
-  <CardM key={trip.id}>
+  
+  <CardM key={viagem.id}>
     
     
     <CardContent>
@@ -57,11 +58,11 @@ export default function CardMobile() {
 
     <Box sx={{ display:'flex', flexDirection: 'column'}}>
       
-      <Typography sx={{ fontSize: 12, marginBottom: 0.55 }} color="inherit" >{trip.id} </Typography>
+      <Typography sx={{ fontSize: 12, marginBottom: 0.55 }} color="inherit" >{viagem.id} </Typography>
         
         <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, alignItems: 'center'}}>
           <LocationOn fontSize="small" sx={{color:'#7C7C8A'}}/>
-          <Typography variant="subtitle1" color="text.secondary">{trip.cidade}</Typography>
+          <Typography variant="subtitle1" color="text.secondary">{viagem.cidade}</Typography>
         </Box>
 
     {/* DATA DE IDA E VOLTA */}
@@ -70,14 +71,14 @@ export default function CardMobile() {
     
       <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center'}}>
         <CalendarMonth fontSize="small" sx={{color:'#7C7C8A'}}/>
-        <Typography component="span" variant="subtitle2" color="text.secondary">{trip.dataIda.toLocaleString()}</Typography>
+        <Typography component="span" variant="subtitle2" color="text.secondary">{viagem.dataIda.toLocaleString()}</Typography>
       </Box>
 
       <SyncAlt sx={{color:'#7C7C8A'}} />
 
       <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center',}}>
         <CalendarMonth fontSize="small" sx={{color:'#7C7C8A'}}/>
-        <Typography component='span' variant="subtitle2" color="text.secondary">{trip.dataVolta.toLocaleString()}</Typography>
+        <Typography component='span' variant="subtitle2" color="text.secondary">{viagem.dataVolta.toLocaleString()}</Typography>
       </Box>
     </Box>
 
@@ -105,7 +106,7 @@ export default function CardMobile() {
   </CardActions>
 
 </CardM> 
-))}
+
 <footer>
   {isLoading && (
   <LinearProgress variant='indeterminate'/>

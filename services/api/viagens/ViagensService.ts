@@ -33,7 +33,7 @@ type TViagensComTotalCount = {
 
 const getAll = async (page = 1, filter= ''): Promise<TViagensComTotalCount | Error> => {
     try {
-        const urlRelativa = `/viagens?_page=${page}&_limit=${Enviroment.LIMITE_DE_LINHAS}&cidade_like=${filter}`;
+        const urlRelativa = `/viagens?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
         
         const { data, headers } = await Api.get(urlRelativa);
 
@@ -51,7 +51,7 @@ const getAll = async (page = 1, filter= ''): Promise<TViagensComTotalCount | Err
     }
 }
 
-const getById = async (id: number): Promise<IDetalheViagem | Error> => {
+const getById = async (id: number): Promise<TViagensComTotalCount | Error> => {
     try {
         const { data } = await Api.get(`/viagens/${id}`)
         
