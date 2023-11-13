@@ -92,7 +92,7 @@ return (
 
 <CardActions>
   <Button 
-   onClick={() => navigate('/detalhes')}
+   onClick={() => navigate(`/${viagem.id}/despesas`)}
    size="small" 
    sx={{gap: 0.75, backgroundColor: '#CADCF8', color: '#0065FF', marginRight: 2}}>
     <Visibility/>

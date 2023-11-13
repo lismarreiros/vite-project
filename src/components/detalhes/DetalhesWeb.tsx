@@ -1,15 +1,20 @@
 import { Stack, Typography, Card, Button, Box, Table, TableBody, TableCell, TableContainer, TableRow, TableHead,
 CardContent, IconButton, Modal, Divider } from "@mui/material";
-import { DeleteOutline, LocalPrintshopOutlined, ShareOutlined, EditNoteOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
+import { DeleteOutline, LocalPrintshopOutlined, ShareOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
 AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pending, Payments } from '@mui/icons-material';
+
+
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import { ViagensService } from "../../../services/api/viagens/ViagensService";
+import NovaDespesaForm from './NovaDespesa';  
 import { NavBar } from "../layouts/Navbar";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import NovaDespesaForm from './NovaDespesa';
-  
+
+
 {/* style do Modal */}
 const style = {
-position: 'absolute' as 'absolute',
+position: 'absolute' as const,
 top: '50%',
 left: '50%',
 transform: 'translate(-50%, -50%)',
@@ -20,10 +25,40 @@ borderRadius: '5px',
 boxShadow: 24,
 p: 4,
 };
-  
-const DetalhesWeb = () => {
+
+
+export default function DetalhesWeb () {
 const navigate = useNavigate();
+const { id = 'nova' } = useParams<'id'>();
+const [viagemDetalhes, setViagemDetalhes] = useState({});
 const [categories] = useState(["Alimentação", "Transporte", "Hotel", "Locomoção", "Outros"])
+
+useEffect(() => {
+  ViagensService.getById(Number(id))
+    .then((result) => {
+      if (result instanceof Error) {
+        alert(result.message);
+        navigate('/viagens');
+      } else {
+        setViagemDetalhes(result); // Assumindo que a resposta contém os detalhes da viagem
+      }
+    });
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [id]);
+
+
+const handleDelete = (id: number) => {
+  if (confirm('Realmente deseja apagar?')) {
+    ViagensService.deletebyId(id)
+    .then(result => {
+      if (result instanceof Error) {
+       alert(result.message)
+      } else {
+       alert('Registro apagado com sucesso')
+     }
+    });
+  }
+}
 
   function createData(
   description: string,
@@ -106,9 +141,10 @@ return (
    startIcon={<LocalPrintshopOutlined />}>Imprimir</Button>
 
    <Button
-   onClick={() => navigate('')}
+   onClick={() => navigate('/viagens')}
    size="medium" 
    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
+   onClickCapture={() => handleDelete}
    startIcon={<DeleteOutline />}>Deletar</Button>
     
    </Stack>
@@ -118,12 +154,13 @@ return (
    sx={{ marginLeft: 12, 
    marginTop: 5, 
    fontWeight: 'bold', 
-   color: '#3C3C3C'}}>Detalhes da Viagem #12323</Typography>
+   color: '#3C3C3C'}}>Detalhes da Viagem #{id}</Typography>
     
    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 14}}>
 
    {/* DETALHES FORNECIDOS PELO FORMULÁRIO */}
-   <Card sx={{ width: '460px', height: '500px', marginLeft: 12, marginTop: 2, backgroundColor: '#F5F5F6', boxShadow: 'none'}}>
+    <>
+  <Card sx={{ width: '460px', height: '500px', marginLeft: 12, marginTop: 2, backgroundColor: '#F5F5F6', boxShadow: 'none'}}>
    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 4, padding: 3}}>
 
    {/* DESTINO */}
@@ -132,7 +169,7 @@ return (
      <FmdGoodOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
      <Typography variant="subtitle1" color="text.secondary">Destino</Typography>
      </Box>
-     <Typography sx={{ fontWeight: 500}}>Bom Jesus - PI</Typography>
+     <Typography sx={{ fontWeight: 500}}></Typography>
     </Box>
 
 
@@ -144,7 +181,7 @@ return (
      <CalendarMonthOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
      <Typography variant="subtitle1" color="text.secondary">Data de Ida</Typography>
      </Box>
-      <Typography sx={{ fontWeight: 500}}>12/12/2002</Typography>
+      <Typography sx={{ fontWeight: 500}}></Typography>
     </Box>
 
     {/* DATA DE VOLTA */}
@@ -153,7 +190,7 @@ return (
         <CalendarMonthOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
         <Typography variant="subtitle1" color="text.secondary">Data de Volta</Typography>
       </Box>
-      <Typography sx={{ fontWeight: 500}}>12/12/2002</Typography>
+      <Typography sx={{ fontWeight: 500}}></Typography>
     </Box>
     
     </Box>
@@ -196,6 +233,7 @@ return (
 
     </CardContent>
    </Card>
+  </>
 
    <Box>
     <Box 
@@ -303,5 +341,3 @@ return (
 </Box>
   )
 }
-
-export default DetalhesWeb
