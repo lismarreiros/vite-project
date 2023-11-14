@@ -10,6 +10,13 @@ export interface IListagemDespesas {
     categoriaId: number;
 }
 
+interface INovaDespesa {
+    id: number;
+    descricao: string;
+    valor: number;
+    data: Date;
+    categoriaId: string;
+}
 
 type TDespesasComTotalCount = {
     data: IListagemDespesas[];
@@ -36,7 +43,7 @@ const getAll = async (page = 1, filter= ''): Promise<TDespesasComTotalCount| Err
     }
 }
 
-const getById = async (id: number): Promise<TDespesasComTotalCount | Error> => {
+const getById = async (id: number, ): Promise<TDespesasComTotalCount | Error> => {
     try {
         const { data, headers } = await Api.get(`${id}/despesas/`)
       
@@ -54,9 +61,9 @@ const getById = async (id: number): Promise<TDespesasComTotalCount | Error> => {
     }
 }
 
-const create = async (dados: Omit<IListagemDespesas, 'id'>): Promise<number | Error> => {
+const create = async (dados: Omit<INovaDespesa, 'id'>): Promise<number | Error> => {
     try {
-        const { data } = await Api.post<IListagemDespesas>(`:id/despesas/`, dados);
+        const { data } = await Api.post<INovaDespesa>(`:id/despesas/`, dados);
         
         if (data) {
           return data.id;
