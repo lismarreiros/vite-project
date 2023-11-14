@@ -9,23 +9,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
+import { DespesasService } from "../../../services/api/despesas/DespesasService";
+import { create } from "@mui/material/styles/createTransitions";
 
 const schema = z.object({
-  descriptionDes: z.string().min(1, 'Descrição é obrigatória')
+  descricao: z.string().min(1, 'Descrição é obrigatória')
   .max(100),
 
-  dateDes: z.coerce.date({
+  data: z.coerce.date({
   errorMap: () => {
   return {
   message: 'Selecione uma data'
   }}}),
 
-  valueDes: z.coerce.number().min(0.01, {
+  valor: z.coerce.number().min(0.01, {
     message: 'Informe um valor válido.',
   }),
-  categorieDes: z.string().min(1, 'Selecione uma opção.'),
+  categoriaId: z.string().min(1, 'Selecione uma opção.'),
 
-  imageDes: z.instanceof(FileList).transform(list => list.item(0)).optional(),
+  image: z.instanceof(FileList).transform(list => list.item(0)).optional(),
 
 }).required();
 
@@ -45,7 +47,7 @@ const VisuallyHiddenInput = styled('input')({
 
 
 const NDespesaMobile = () => {
-  const [output, setOutput] = useState('')
+
   const { control, 
    handleSubmit, 
    formState: { errors }} = useForm<FormValuesDespesas>({
@@ -53,14 +55,15 @@ const NDespesaMobile = () => {
    criteriaMode: "all",
    mode: "all",
    defaultValues: {
-   descriptionDes: '',
-   dateDes: undefined,
-   valueDes: 0,
-   categorieDes: '',
-   imageDes: undefined,  
+   descricao: '',
+   data: undefined,
+   valor: undefined,
+   categoriaId: '',
+   image: undefined,  
   },
   })
   const navigate = useNavigate();
+  const { id = 'nova' } = useParams<'id'>();
   const [uploadedImage, setUploadedImage] = useState(null);
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -68,9 +71,26 @@ const NDespesaMobile = () => {
     setUploadedImage(file);
   };
 
-  function createDespesa(data:any) {
-  setOutput(JSON.stringify(data, null, 2))}
-  
+  const createDespesa = async (data: FormValuesDespesas) => {
+    try {
+      // Aqui, você pode usar o serviço DespesasService para enviar os dados ao backend
+      const response = await DespesasService.create(data);
+
+      // Verifica se houve algum erro no backend
+      if (response instanceof Error) {
+        alert(response.message);
+      } else {
+        // Se não houver erros, você pode navegar para outra página ou realizar ações necessárias
+        console.log(data)
+        alert('Despesa criada com sucesso!');
+        navigate('/despesas'); // ou a rota desejada
+      }
+    } catch (error) {
+      console.error(error);
+      // Trate outros erros conforme necessário
+    }
+  };
+
   return (
   <div>
    <NavBar/>
@@ -87,7 +107,7 @@ const NDespesaMobile = () => {
   {/* INPUT DE TEXTO - DESCRIÇÃO */}
 
   <Controller 
-    name="descriptionDes"
+    name="descricao"
     control={control}
     render={({ field }) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1}}>
@@ -97,7 +117,7 @@ const NDespesaMobile = () => {
       id="component-outlined"
       label="Descrição"
       {...field}/>
-      {errors.descriptionDes && <Typography color="error">{errors.descriptionDes?.message}</Typography>}
+      {errors.descricao && <Typography color="error">{errors.descricao?.message}</Typography>}
     </Box>
     )} 
     />
@@ -106,10 +126,7 @@ const NDespesaMobile = () => {
    
   {/* INPUT DE DATA */}
   
-   <Controller
-   name="dateDes"
-   control={control}
-   render={({field}) => (
+   <Controller name="data" control={control} render={({field}) => (
     <Box sx={{gap:1}}>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <DatePicker
@@ -118,7 +135,7 @@ const NDespesaMobile = () => {
      format="DD/MM/YYYY"
      {...field}/>
     </LocalizationProvider>
-    {errors.dateDes && <Typography color="error">{errors.dateDes.message}</Typography>}
+    {errors.data && <Typography color="error">{errors.data?.message}</Typography>}
   </Box>
    )} />
  
@@ -126,7 +143,7 @@ const NDespesaMobile = () => {
   {/* INPUT DE VALOR */}
 
   <Controller
-  name="valueDes"
+  name="valor"
   control={control}
   render={({ field }) => (
     <Box>
@@ -136,7 +153,7 @@ const NDespesaMobile = () => {
     type="number"
     defaultValue="disabled"
     InputProps={{startAdornment: <InputAdornment position="start">R$</InputAdornment>}} {...field}/>
-    {errors.valueDes && <Typography color="error"> {errors.valueDes.message}</Typography>}
+    {errors.valor && <Typography color="error"> {errors.valor.message}</Typography>}
    </Box>
   )} />
    
@@ -144,18 +161,15 @@ const NDespesaMobile = () => {
 
    {/* INPUT DE ESCOLHER A CATEGORIA */} 
    <FormLabel sx={{marginTop: 3}}id="demo-row-radio-buttons-group-label">Categoria</FormLabel>
-   <Controller
-   name="categorieDes"
-   control={control}
-   render={({field}) => (
+   <Controller name="categoriaId" control={control} render={({field}) => (
    <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" {...field}>
-   <FormControlLabel value="alimentação" control={<Radio />} label="Alimentação" />
-   <FormControlLabel value="locomoção" control={<Radio />} label="Locomoção" />
-   <FormControlLabel value="outros" control={<Radio />} label="Outros" />
+   <FormControlLabel value="2" control={<Radio />} label="Alimentação" />
+   <FormControlLabel value="1" control={<Radio />} label="Locomoção" />
+   <FormControlLabel value="3" control={<Radio />} label="Outros" />
    </RadioGroup>
    )} />
 
-   {errors.categorieDes && (<Typography color="error" >{errors.categorieDes.message}</Typography>)}
+   {errors.categoriaId && (<Typography color="error" >{errors.categoriaId.message}</Typography>)}
 
 
 
@@ -188,22 +202,20 @@ const NDespesaMobile = () => {
    {/* BOTÃO DE SALVAR NOVA DESPESA */}
    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
    <Button
-   onClick={() => navigate('/detalhes')}
+   onClick={() => navigate(':id/despesas')}
    size="large" 
    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
    Voltar
    </Button>
-   <Button
-   type="submit"
-   size="large" 
-   sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
+   <Button 
+   onClick={handleSubmit(createDespesa)}
+   type="submit" size="large"  sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
    Salvar
    </Button>
    </Box>
  
    </FormControl>
 
-   <pre>{output}</pre>
 </form>
 </div>
    
