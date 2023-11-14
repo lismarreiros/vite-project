@@ -38,10 +38,13 @@ const getAll = async (page = 1, filter= ''): Promise<TDespesasComTotalCount| Err
 
 const getById = async (id: number): Promise<TDespesasComTotalCount | Error> => {
     try {
-        const { data } = await Api.get(`:id/despesas/${id}`)
-        
+        const { data, headers } = await Api.get(`${id}/despesas/`)
+      
         if (data) {
-            return data;
+            return {
+                data,
+                totalCount: Number(headers['x-total-count'] || Enviroment.LIMITE_DE_LINHAS),
+            }
         }
 
         return new Error('Erro ao consultar o registros.')

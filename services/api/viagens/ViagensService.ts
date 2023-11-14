@@ -51,7 +51,7 @@ const getAll = async (page = 1, filter= ''): Promise<TViagensComTotalCount | Err
     }
 }
 
-const getById = async (id: number): Promise<TViagensComTotalCount | Error> => {
+const getById = async (id: number): Promise<IListagemViagem | Error> => {
     try {
         const { data } = await Api.get(`/viagens/${id}`)
         

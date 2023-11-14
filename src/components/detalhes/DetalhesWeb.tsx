@@ -1,7 +1,6 @@
 import { Stack, Typography, Card, Button, Box, Table, TableBody, TableCell, TableContainer, TableRow, TableHead,
 CardContent, IconButton, Modal, Divider, TableFooter, LinearProgress } from "@mui/material";
 import { DeleteOutline, LocalPrintshopOutlined, ShareOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pending, Payments } from '@mui/icons-material';
 
 
@@ -35,147 +34,196 @@ const navigate = useNavigate();
 const { debounce } = useDebounce();
 const { id = 'nova' } = useParams<'id'>();
 const [rows, setRows] = useState<IListagemDespesas[]>([]);
-const [card, setCard] = useState<IListagemViagem[]>();
-//const [categories] = useState(["Alimentação", "Transporte", "Hotel", "Locomoção", "Outros"])
-const [totalCount, setTotalCount] = useState(0);
+const [card, setCard] = useState<IListagemViagem>();
 const [isLoading, setIsLoading] = useState(true);
+const [totalAmount, setTotalAmount] = useState<number>(0);
+const [diferenca, setDiferenca] = useState(0);
+
 
 useEffect(() => {
   setIsLoading(true);
-  
+
   debounce(() => {
     ViagensService.getById(Number(id))
-    .then((result) => {
-      setIsLoading(false);
+      .then((result) => {
+        setIsLoading(false);
 
-      if (result instanceof Error) {
-        alert(result.message)
-        navigate('/viagens')
-      } else {
-        console.log(result)
-        setCard(result.data);
-      }
-    });  
+        if (result instanceof Error) {
+          alert(result.message);
+          navigate('/viagens');
+        } else {
+          console.log(result);
+          setCard(result);
+        }
+      });
   });
- 
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [id]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
 useEffect(() => {
   setIsLoading(true);
 
   debounce(() => {
-  DespesasService.getAll()
+  DespesasService.getById(Number(id))
     .then((result) => {
      setIsLoading(false);
 
      if (result instanceof Error) {
       alert(result.message);
       } else {
-      console.log(result);
+   
+      const valorHotel = card ? card.valorHotel : 0;
+      const valorTrans = card ? card.valorTrans : 0;
+      const dataIda = card ? card.dataIda : new Date();
+      const idViagem = card ? card.id : 0;
 
-      setTotalCount(result.totalCount);
-      setRows(result.data);
+      const despesasDaViagem: IListagemDespesas[] = [
+        {
+          id: 100,
+          descricao: 'Hotel',
+          valor: valorHotel,
+          data: dataIda,
+          viagemId: idViagem,
+          categoriaId: 4
+        },
+        {
+          id: 101,
+          descricao: 'Transporte',
+          valor: valorTrans,
+          data: dataIda,
+          viagemId: idViagem,
+          categoriaId: 5
+        },
+      ];
+     
+      const totalAmountFromDespesas = despesasDaViagem.reduce(
+        (acc, despesa) => acc + despesa.valor,
+        0
+      );
+      
+      const totalAmountFromRows = result.data.reduce(
+        (acc, row) => acc + row.valor,
+        0
+      );
+
+      const totalAmount = totalAmountFromRows + totalAmountFromDespesas || 0;
+      const diferencaCalculada = totalAmount - (card?.adiantamento || 0);
+      
+
+      setRows([...result.data, ...despesasDaViagem]);
+      
+      console.log([...result.data, ...despesasDaViagem]);
+      setTotalAmount(totalAmount);
+      setDiferenca(diferencaCalculada);
       }
     });
   });
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+}, [id]);
 
 
 {/* ícones da categoria */}
-//const getCategoryIcon = (category : string) => {
-//switch (category) {
-//  case "Alimentação":
-//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
-//  <Restaurant fontSize="small"/>
-//  {category} 
-//  </Box>;
+const getCategoryIcon = (category : number) => {
+switch (category) {
+  case 2:
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
+  <Restaurant fontSize="small"/>
+  Alimentação
+  </Box>;
         
-//  case "Transporte":
-//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
-//  <DirectionsBus/>
-//  {category}
-//  </Box>;
+  case 5:
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
+  <DirectionsBus/>
+  Transporte
+  </Box>;
      
-//  case "Hotel":
-//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
-//  <Hotel/>
-//  {category}
-//  </Box>;
+  case 4:
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}> 
+  <Hotel/>
+  Hotel
+  </Box>;
      
-//  case "Locomoção":
-//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}} >
-//  <DirectionsCar/>
-// {category}
-//  </Box>;
+  case 1:
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}} >
+  <DirectionsCar/>
+  Locomoção
+  </Box>;
     
-//  case "Outros":
-//  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
-//  <Pending/>
-//  {category}
-//  </Box>;
-//  }
-//};
+  case 3:
+  return <Box sx={{  display:'flex', flexDirection: 'row', gap: 1, alignItems: 'center', color: '#8D8D99'}}>
+  <Pending/>
+  Outros
+  </Box>;
+  }
+};
     
 {/* abrir o modal */}
 const [open, setOpen] = useState(false);
 const handleOpen = () => setOpen(true);
 const handleClose = () => setOpen(false);
 
+{/* funçao para formatar o número para valor monetário */}
+const formatCurrency = (value: number) => {
+  return value.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    minimumFractionDigits: 2,
+  });
+};
+
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('pt-BR');
+};
+
 return (
   <Box>
    <NavBar/>
 
    {/*BOTÕES */}
-   <Stack
-   direction="row"
-   spacing={2}
-   sx={{ marginTop: 10, marginLeft: 12, }}>
+   <Stack direction="row" spacing={2} sx={{ marginTop: 10, marginLeft: 12, }}>
     
    <Button 
-   onClick={() => navigate('')}
-   size="medium" 
-   sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
-   startIcon={<ShareOutlined />}>Compartilhar</Button>
+    onClick={() => navigate('')}
+    size="medium" 
+    sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
+    startIcon={<ShareOutlined />}>Compartilhar</Button>
 
    <Button
-   onClick={() => navigate('')}
-   size="medium" 
-   sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
-   startIcon={<LocalPrintshopOutlined />}>Imprimir</Button>
+    onClick={() => navigate('')}
+    size="medium" 
+    sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
+    startIcon={<LocalPrintshopOutlined />}>Imprimir</Button>
 
    <Button
-   onClick={() => navigate('/viagens')}
-   size="medium" 
-   sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
-   startIcon={<DeleteOutline />}>Deletar</Button>
+    onClick={() => navigate('/viagens')}
+    size="medium" 
+    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
+    startIcon={<DeleteOutline />}>Deletar</Button>
     
    </Stack>
  
    {/* VIAGEM */}
-   <Typography variant="h6" 
-   sx={{ marginLeft: 12, 
-   marginTop: 5, 
-   fontWeight: 'bold', 
-   color: '#3C3C3C'}}>Detalhes da Viagem # {id}</Typography>
-    
-   <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 14}}>
+   <Typography variant="h6" sx={{ marginLeft: 12, marginTop: 5, fontWeight: 'bold', color: '#3C3C3C'}}>Detalhes da Viagem # {id}</Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 14}}>
+
 
    {/* DETALHES FORNECIDOS PELO FORMULÁRIO */}
-    <>
+  
+    <Card sx={{ width: '460px', height: '500px', marginLeft: 12, marginTop: 2, backgroundColor: '#F5F5F6', boxShadow: 'none'}}>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 4, padding: 3}}>
+
+    {/* DESTINO */}
     
-  <Card sx={{ width: '460px', height: '500px', marginLeft: 12, marginTop: 2, backgroundColor: '#F5F5F6', boxShadow: 'none'}}>
-   <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 4, padding: 3}}>
-
-   {/* DESTINO */}
-
-   <Box sx={{ display:'flex', flexDirection:'column'}}>
-     <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, alignItems: 'center'}}>
-     <FmdGoodOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
-     <Typography variant="subtitle1" color="text.secondary">Destino</Typography>
-     </Box>
-     <Typography sx={{ fontWeight: 500}}></Typography>
+    <Box sx={{ display:'flex', flexDirection:'column'}}>
+       <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, alignItems: 'center'}}>
+        <FmdGoodOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
+        <Typography variant="subtitle1" color="text.secondary">Destino</Typography>
+       </Box>
+     
+     { card && (
+       <Typography sx={{ fontWeight: 500}}>{card.cidade}</Typography>
+     ) }
+    
     </Box>
  
 
@@ -188,7 +236,9 @@ return (
      <CalendarMonthOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
      <Typography variant="subtitle1" color="text.secondary">Data de Ida</Typography>
      </Box>
-      <Typography sx={{ fontWeight: 500}}></Typography>
+     { card && (
+       <Typography sx={{ fontWeight: 500}}>{formatDate(card.dataIda)}</Typography>
+     ) }
     </Box>
 
     {/* DATA DE VOLTA */}
@@ -197,7 +247,10 @@ return (
         <CalendarMonthOutlined fontSize="small" sx={{color:'#7C7C8A'}}/>
         <Typography variant="subtitle1" color="text.secondary">Data de Volta</Typography>
       </Box>
-      <Typography sx={{ fontWeight: 500}}></Typography>
+      { card && (
+         <Typography sx={{ fontWeight: 500}}>{formatDate(card.dataVolta)}</Typography> 
+      )}
+    
     </Box>
     
     </Box>
@@ -215,7 +268,10 @@ return (
      <Payments fontSize="small" sx={{color:'#7C7C8A'}}/>
      <Typography variant="subtitle1" color="text.secondary">Adiatamento</Typography>
      </Box>
-     <Typography sx={{ fontWeight: 500}}>R$ 123,00 </Typography>
+     { card && (
+       <Typography sx={{ fontWeight: 500}}>{formatCurrency(card.adiantamento)}</Typography>
+     )}
+    
     </Box>
 
     {/* CUSTOS */}
@@ -224,7 +280,7 @@ return (
       <RemoveCircle fontSize="small" sx={{color:'#7C7C8A'}}/>
       <Typography variant="subtitle1" color="text.secondary">Total dos Custos</Typography>
       </Box>
-      <Typography sx={{ fontWeight: 500}}>{totalCount}</Typography>
+      <Typography sx={{ fontWeight: 500}}>{formatCurrency(totalAmount)}</Typography>
     </Box>
 
   </Box>
@@ -233,14 +289,17 @@ return (
     <Box sx={{ display:'flex', flexDirection:'column'}}>
       <Box sx={{  display:'flex', flexDirection: 'row', gap:0.75, alignItems: 'center'}}>
       <Payments fontSize="small" sx={{color:'#7C7C8A'}}/>
-      <Typography variant="subtitle1" color="text.secondary">A Receber</Typography>
+      <Typography variant="subtitle1" color="text.secondary">A Receber / A Pagar</Typography>
       </Box>
-      <Typography sx={{ fontWeight: 500}}>R$ 789,99</Typography>
+      <Typography sx={{ fontWeight: 500, color: diferenca >= 0 ? 'green' : 'red' }}>
+      {formatCurrency(Math.abs(diferenca))}
+    </Typography>
+    <Typography sx={{ color: '#7C7C8A' }}>{diferenca >= 0 ? 'A Receber' : 'A Pagar'}</Typography>
     </Box>
 
     </CardContent>
-   </Card>
-  </>
+   </Card> 
+   
 
    <Box>
     <Box 
@@ -289,7 +348,7 @@ return (
    
     {rows.map((row => (
     <TableRow
-    key={row.descricao}
+    key={row.id}
     sx={{ '&:last-child td, &:last-child th': { border: 0 }, 
     backgroundColor:'#FFFFFF', 
     boxShadow: 0.75, 
@@ -306,9 +365,9 @@ return (
     </IconButton>
     </TableCell>
     <TableCell sx={{ color: '#8D8D99'}} component="th" scope="row">{row.descricao}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left">{row.data.toLocaleString()}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left">{row.categoriaId}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left">R$ {row.valor}</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left"> {formatDate(row.data)}</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left">{getCategoryIcon(row.categoriaId) }</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left">{formatCurrency(row.valor)}</TableCell>
     <TableCell sx={{ color: '#8D8D99'}} align="left">
     <IconButton
     sx={{ backgroundColor: '#CADCF8', color: '#0065FF'}}
@@ -330,6 +389,7 @@ return (
 </TableContainer>
 </Box>
 </Box>
+
 <Modal
   open={open}
   onClose={handleClose}
