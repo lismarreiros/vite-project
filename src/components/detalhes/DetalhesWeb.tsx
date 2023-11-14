@@ -71,7 +71,7 @@ useEffect(() => {
      if (result instanceof Error) {
       alert(result.message);
       } else {
-   
+      
       const valorHotel = card ? card.valorHotel : 0;
       const valorTrans = card ? card.valorTrans : 0;
       const dataIda = card ? card.dataIda : new Date();
@@ -109,10 +109,8 @@ useEffect(() => {
       const totalAmount = totalAmountFromRows + totalAmountFromDespesas || 0;
       const diferencaCalculada = totalAmount - (card?.adiantamento || 0);
       
-
       setRows([...result.data, ...despesasDaViagem]);
       
-      console.log([...result.data, ...despesasDaViagem]);
       setTotalAmount(totalAmount);
       setDiferenca(diferencaCalculada);
       }
@@ -171,7 +169,7 @@ const formatCurrency = (value: number) => {
   });
 };
 
-const formatDate = (date) => {
+const formatDate = (date: string | number | Date) => {
   return new Date(date).toLocaleDateString('pt-BR');
 };
 
