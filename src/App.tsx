@@ -11,7 +11,6 @@ import { AuthProvider } from '../shared/contexts/';
 export default function App() {
   return (
     <AuthProvider>
-     
         <BrowserRouter> 
         <Entrar>
           <Routes>

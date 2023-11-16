@@ -1,20 +1,27 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { Alert } from '@mui/joy';
+
+import { useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormProvider, useForm } from "react-hook-form";
+
 import { Destino } from "./stepcomponents/Destino";
 import { Transporte } from "./stepcomponents/Transporte";
 import { Hospedagem } from "./stepcomponents/Hospedagem";
 import { Adiantamento } from "./stepcomponents/Adiantamento";
 import { Steps } from "./Stepper";
-
 import { NavBar } from '../layouts/Navbar';
 import { StepsMobile } from './StepperMobile';
 import { ViagensService } from '../../../services/api/viagens/ViagensService';
 
 const schema = z.object({
 cidade: z.string().min(1, 'Informe pelo menos uma cidade')
-.max(100),
+.transform(name => {
+  return name.trim().split(' ').map(word => {
+    return word[0].toLocaleUpperCase().concat(word.substring(1))
+  }).join(' ')
+}),
 
 dataIda: z.coerce.date({
 errorMap: () => {
@@ -107,7 +114,9 @@ const getSteps = (errors: string[]) => {
   });
 };
 
- const Form = () => {
+
+const Form = () => {
+  const navigate = useNavigate();
   const methods = useForm<FormValues>({
   resolver: zodResolver(schema),
   criteriaMode: "all",
@@ -127,16 +136,18 @@ const getSteps = (errors: string[]) => {
 
   if (methods.formState.isSubmitSuccessful) {
     return (
-    <Box>
-    <Typography variant="subtitle1">Viagem Criada</Typography>
-    <Button onClick={() => methods.reset()}>
-    Clique aqui para enviar um novo cadastro
-    </Button>
-    </Box>
+      <Box sx={{margin: 3}}>   
+      <Alert variant='solid' color="success">
+        Success
+      </Alert>
+      <Button onClick={() => navigate('/viagens')}>
+        Ver minhas viagens
+      </Button></Box>
     );
   }
 
   const steps = getSteps(Object.keys(methods.formState.errors));
+ 
 
   function createViagem(data: FormValues) {
 

@@ -41,16 +41,17 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<handleLoginFormData>({
     resolver: zodResolver(loginSchema)
   });
-  const { isAuthenticated, login } = useAuthContext();
 
-  function handleLogin(data: handleLoginFormData) {
-    const { email, senha } = data
-    login(email, senha)
+  const { isAuthenticated, login } = useAuthContext();
+  
+  const handleLogin = (data: handleLoginFormData) => {
+    login(data.email, data.senha);
   }
 
-  if (isAuthenticated) return (
- <>{children}</>
-  );
+  if (isAuthenticated) 
+    return (
+      <>{children}</>
+    );
 
   return (
   <Box>

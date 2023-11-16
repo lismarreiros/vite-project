@@ -6,7 +6,7 @@ interface IAuth {
 
 const auth = async (email: string, senha: string): Promise<IAuth | Error> => {
     try {
-        const { data } = await Api.post('/entrar', { data: { email, senha } });
+        const { data } = await Api().post('/', { email, senha });
         
         if (data) {
           return data;

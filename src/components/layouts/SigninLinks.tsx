@@ -5,16 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../shared/contexts";
   
   
- export const SigninLinks = () => {
+export const SigninLinks = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { logout } = useAuthContext();
   
   
+  
   return (
   <AppBar sx={{backgroundColor: '#0747A6', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', boxShadow: 0 }} position='sticky'>
       
-{/* Botão de Mostrar todas as viagens*/}
+  {/* Botão de Mostrar todas as viagens*/}
   <Toolbar>
     <IconButton
       onClick={() => navigate('/viagens')}
@@ -27,7 +28,7 @@ import { useAuthContext } from "../../../shared/contexts";
        <Typography variant="subtitle1" component='div' sx={{display:{ xs: 'none', sm: 'block'}}}>Viagens</Typography>
     </IconButton>
     
-{/* Botão de abrir o formulário para adicionar uma viagem*/}    
+  {/* Botão de abrir o formulário para adicionar uma viagem*/}    
     <IconButton
       onClick={() => navigate('/')}
       size="large" 
@@ -40,7 +41,7 @@ import { useAuthContext } from "../../../shared/contexts";
     </IconButton>
   </Toolbar>
     
-{/* Botão para abrir o Menu*/}
+  {/* Botão para abrir o Menu*/}
     <IconButton
       size="large" 
       edge="start" 
@@ -49,10 +50,10 @@ import { useAuthContext } from "../../../shared/contexts";
       onClick={()=>setOpen(true)}
       sx={{gap:1}}>
        <Avatar sx={{width:30, height: 30}} src="#" />
-       <Typography sx={{color:"white", display:{ xs: 'none', sm: 'block'}}}>José</Typography>
+       <Typography sx={{color:"white", display:{ xs: 'none', sm: 'block'}}}>{}</Typography>
     </IconButton>
 
-{/* menu hidden */}
+  {/* menu hidden */}
   <Menu
     id="demo-positioned-menu"
     aria-labelledby="demo-positioned-button"

@@ -44,6 +44,10 @@ export default function CardMobile({ viagem }: CardViagemProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viagem.id]);
 
+  const formatDate = (date: string | number | Date) => {
+    return new Date(date).toLocaleDateString('pt-BR');
+  };
+
   return (
     <>
   
@@ -69,14 +73,14 @@ export default function CardMobile({ viagem }: CardViagemProps) {
     
       <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center'}}>
         <CalendarMonth fontSize="small" sx={{color:'#7C7C8A'}}/>
-        <Typography component="span" variant="subtitle2" color="text.secondary">{viagem.dataIda.toLocaleString()}</Typography>
+        <Typography component="span" variant="subtitle2" color="text.secondary">{formatDate(viagem.dataIda)}</Typography>
       </Box>
 
       <SyncAlt sx={{color:'#7C7C8A'}} />
 
       <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center',}}>
         <CalendarMonth fontSize="small" sx={{color:'#7C7C8A'}}/>
-        <Typography component='span' variant="subtitle2" color="text.secondary">{viagem.dataVolta.toLocaleString()}</Typography>
+        <Typography component='span' variant="subtitle2" color="text.secondary">{formatDate(viagem.dataVolta)}</Typography>
       </Box>
     </Box>
 
