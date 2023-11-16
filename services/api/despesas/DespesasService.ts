@@ -23,9 +23,9 @@ type TDespesasComTotalCount = {
     totalCount: number;
 }
 
-const getAll = async (page = 1, filter= ''): Promise<TDespesasComTotalCount| Error> => {
+const getAll = async (id: number, page = 1, filter= ''): Promise<TDespesasComTotalCount| Error> => {
     try {
-        const urlRelativa = `:id/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
+        const urlRelativa = `${id}/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
         
         const { data, headers } = await Api.get(urlRelativa);
 
@@ -43,7 +43,7 @@ const getAll = async (page = 1, filter= ''): Promise<TDespesasComTotalCount| Err
     }
 }
 
-const getById = async (id: number, ): Promise<TDespesasComTotalCount | Error> => {
+const getById = async (id: number ): Promise<TDespesasComTotalCount | Error> => {
     try {
         const { data, headers } = await Api.get(`${id}/despesas/`)
       
@@ -63,7 +63,7 @@ const getById = async (id: number, ): Promise<TDespesasComTotalCount | Error> =>
 
 const create = async (dados: Omit<INovaDespesa, 'id'>): Promise<number | Error> => {
     try {
-        const { data } = await Api.post<INovaDespesa>(`:id/despesas/`, dados);
+        const { data } = await Api.post<INovaDespesa>(`/despesas/`, dados);
         
         if (data) {
           return data.id;

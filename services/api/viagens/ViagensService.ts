@@ -6,7 +6,7 @@ export interface IListagemViagem {
     cidade: string;
     dataIda: Date;
     dataVolta: Date;
-    categoriaId: number;
+    categoriaT: number;
     valorTrans: number;
     nomeHotel: string;
     valorHotel: number;
@@ -19,7 +19,7 @@ export interface IDetalheViagem {
     cidade: string;
     dataIda: Date;
     dataVolta: Date;
-    categoriaId: number;
+    categoriaT: number;
     valorTrans: number;
     nomeHotel: string;
     valorHotel: number;

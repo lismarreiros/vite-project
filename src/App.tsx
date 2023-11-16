@@ -17,8 +17,8 @@ export default function App() {
           <Routes>
           <Route path='/' element={<Form/>} />
           <Route path='/viagens' element={<Viagens/>} />
-          <Route path=':id/despesas' element={<DetViagem/>} />
-          <Route path='/novadespesa' element={<NDespesaMobile/>} />
+          <Route path='/:id/despesas' element={<DetViagem/>} />
+          <Route path='/:id/despesas/novadespesa' element={<NDespesaMobile/>} />
           </Routes>
           </Entrar>
         </BrowserRouter>

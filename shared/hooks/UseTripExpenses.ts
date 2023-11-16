@@ -49,7 +49,7 @@ const UseTripExpenses = (tripId: string) => {
       }
       const initialExpenses = [
         tripExpenseFactory(
-          0,
+          100,
           "Hotel",
           trip.valorHotel,
           trip.dataIda,
@@ -57,7 +57,7 @@ const UseTripExpenses = (tripId: string) => {
           4
         ),
         tripExpenseFactory(
-          0,
+          101,
           "Transporte",
           trip.valorTrans,
           trip.dataIda,

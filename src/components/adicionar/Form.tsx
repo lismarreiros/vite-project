@@ -7,18 +7,14 @@ import { Transporte } from "./stepcomponents/Transporte";
 import { Hospedagem } from "./stepcomponents/Hospedagem";
 import { Adiantamento } from "./stepcomponents/Adiantamento";
 import { Steps } from "./Stepper";
-import { useState } from 'react';
+
 import { NavBar } from '../layouts/Navbar';
 import { StepsMobile } from './StepperMobile';
+import { ViagensService } from '../../../services/api/viagens/ViagensService';
 
 const schema = z.object({
 cidade: z.string().min(1, 'Informe pelo menos uma cidade')
-.max(100)
-.transform(cidade => {
-return cidade.trim().split('').map(word => {
-return word[0].toLocaleUpperCase().concat(word.substring(1))
-}).join(' ')
-}),
+.max(100),
 
 dataIda: z.coerce.date({
 errorMap: () => {
@@ -32,7 +28,7 @@ return {
 message: 'Selecione uma data de volta'
 }}}), 
    
-categoria: z.string({   
+categoriaT: z.coerce.number({   
 errorMap: () => {
 return {
 message: 'Selecione uma opção.'
@@ -45,7 +41,7 @@ message: 'Informe  um valor.'
 }}})
 .positive({message:'Digite um número válido'}),
 
-imagemTrans: z.instanceof(FileList).transform(list => list.item(0)),
+//imagemTrans: z.instanceof(FileList).transform(list => list.item(0)),
 
 nomeHotel: z.string().min(1, {message: 'Informe um nome'}),
 
@@ -55,23 +51,23 @@ return {
 message: 'Informe  um valor.'
 }}}),
 
-imageHotel: z.instanceof(FileList).transform(list => list.item(0))
-.optional(),
+//imageHotel: z.instanceof(FileList).transform(list => list.item(0))
+//.optional(),
 
-valorAdia: z.coerce.number({
+adiantamento: z.coerce.number({
 errorMap: () => {
 return {
 message: 'Informe  um valor.'
 }}}),
    
-dataAdia: z.coerce.date({
+adiantData: z.coerce.date({
 errorMap: () => {
 return {
 message: 'Selecione uma data.'
 }}}),
 
-imageAdia: z.instanceof(FileList).transform(list => list.item(0))
-.optional(),
+//imageAdia: z.instanceof(FileList).transform(list => list.item(0))
+//.optional(),
 
 }).required();
 
@@ -112,7 +108,6 @@ const getSteps = (errors: string[]) => {
 };
 
  const Form = () => {
-  const [output, setOutput] = useState('')
   const methods = useForm<FormValues>({
   resolver: zodResolver(schema),
   criteriaMode: "all",
@@ -121,19 +116,19 @@ const getSteps = (errors: string[]) => {
   cidade: "",
   dataIda: undefined,
   dataVolta: undefined,
-  categoria: undefined,
+  categoriaT: undefined,
   valorTrans: undefined,
   nomeHotel: "",
   valorHotel: undefined,
-  valorAdia: undefined,
-  dataAdia: undefined,
+  adiantamento: undefined,
+  adiantData: undefined,
   },
   });
 
   if (methods.formState.isSubmitSuccessful) {
     return (
     <Box>
-    <Typography variant="h2">Formulário enviado com sucesso!</Typography>
+    <Typography variant="subtitle1">Viagem Criada</Typography>
     <Button onClick={() => methods.reset()}>
     Clique aqui para enviar um novo cadastro
     </Button>
@@ -143,22 +138,29 @@ const getSteps = (errors: string[]) => {
 
   const steps = getSteps(Object.keys(methods.formState.errors));
 
-  function createUser(data:any) {
-    setOutput(JSON.stringify(data, null, 2))
-  }
+  function createViagem(data: FormValues) {
 
+    ViagensService.create(data)
+    .then(response => {
+      // Handle the response as needed
+      console.log('Viagem criada', response);
+    })
+    .catch(error => {
+      // Handle the error
+      console.error('Error', error);
+    });
+  }
 
   return( 
   <FormProvider {...methods}>
     <NavBar/>
-    <form onSubmit={methods.handleSubmit(createUser)}>
+    <form onSubmit={methods.handleSubmit(createViagem)}>
     {window.innerWidth <=600 ? (
     <StepsMobile items={steps}/>
      ): (
     <Steps items={steps}/>
     )}
     </form>
-    <pre>{output}</pre>
     </FormProvider>
     );
 }

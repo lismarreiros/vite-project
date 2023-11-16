@@ -87,9 +87,9 @@ return (
     justifyContent: 'flex-start',
     color: '#00000099'
     }}>
-    <FormControlLabel value="avião" control={<Radio />} label="Avião" />
-    <FormControlLabel value="ônibus" control={<Radio />} label="Ônibus" />
-    <FormControlLabel value="carro" control={<Radio />} label="Carro" />
+    <FormControlLabel value="1" control={<Radio />} label="Avião" />
+    <FormControlLabel value="2" control={<Radio />} label="Ônibus" />
+    <FormControlLabel value="3" control={<Radio />} label="Carro" />
     </RadioGroup>
     <FormHelperText>{fieldState.error?.message}</FormHelperText>
     </FormControl>)}

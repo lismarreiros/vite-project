@@ -20,8 +20,7 @@ const CardM = styled(Card)(() => ({
 export default function CardMobile({ viagem }: CardViagemProps) {
   const navigate = useNavigate();
   const { debounce } = useDebounce();
-
-  const [card, setCard] = useState<IListagemViagem[]>([]);  
+ 
   const [isLoading, setIsLoading] = useState(true);
  
 
@@ -38,7 +37,6 @@ export default function CardMobile({ viagem }: CardViagemProps) {
           return;
         } else {
           console.log(result)
-          setCard(result.data);
         }
       });  
     });
@@ -98,7 +96,7 @@ export default function CardMobile({ viagem }: CardViagemProps) {
   
   <CardActions>
     <IconButton 
-     onClick={() => navigate('/detalhes')}
+       onClick={() => navigate(`/${viagem.id}/despesas`)}
      size="small" 
      sx={{ backgroundColor: '#CADCF8', color: '#0065FF', marginRight: 2}}>
       <Visibility/>

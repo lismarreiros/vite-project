@@ -2,7 +2,7 @@ import { Button, Box, Card, CardActions, CardContent, Typography } from '@mui/ma
 import { Visibility, LocationOn, SyncAlt, CalendarMonth} from '@mui/icons-material';
 
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { ViagensService, IListagemViagem } from '../../../services/api/viagens/ViagensService';
 import { useDebounce } from '../../../shared/hooks/UseDebounce';
@@ -14,8 +14,6 @@ interface CardViagemProps {
 export default function CardViagem({ viagem }: CardViagemProps) {
   const navigate = useNavigate();
   const { debounce } = useDebounce();
-
-  const [card, setCard] = useState<IListagemViagem[]>([]);
 
   useEffect(() => {
 
@@ -29,7 +27,6 @@ export default function CardViagem({ viagem }: CardViagemProps) {
           return;
         } else {
           console.log(result)
-          setCard(result.data);
         }
       });  
     });

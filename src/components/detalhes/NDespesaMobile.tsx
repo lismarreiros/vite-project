@@ -1,5 +1,4 @@
-import { FormControl, InputLabel, TextField, OutlinedInput, Box, InputAdornment, 
-FormLabel, FormControlLabel, Radio, RadioGroup, IconButton, styled, Button, Typography } from "@mui/material";
+import { FormControl, InputLabel, TextField, OutlinedInput, Box, InputAdornment, FormLabel, FormControlLabel, Radio, RadioGroup, IconButton, styled, Button, Typography } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ImageOutlined, RemoveCircle, CameraAltOutlined } from "@mui/icons-material";
@@ -7,10 +6,11 @@ import { NavBar } from "../layouts/Navbar";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState } from 'react';
+//import { useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
+import { useParams } from 'react-router-dom';
 import { DespesasService } from "../../../services/api/despesas/DespesasService";
-import { create } from "@mui/material/styles/createTransitions";
+
 
 const schema = z.object({
   descricao: z.string().min(1, 'Descrição é obrigatória')
@@ -27,11 +27,11 @@ const schema = z.object({
   }),
   categoriaId: z.string().min(1, 'Selecione uma opção.'),
 
-  image: z.instanceof(FileList).transform(list => list.item(0)).optional(),
+//  image: z.instanceof(FileList).transform(list => list.item(0)).optional(),
 
 }).required();
 
-type FormValuesDespesas =  z.infer<typeof schema>;
+type FormDespesas =  z.infer<typeof schema>;
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -50,7 +50,7 @@ const NDespesaMobile = () => {
 
   const { control, 
    handleSubmit, 
-   formState: { errors }} = useForm<FormValuesDespesas>({
+   formState: { errors }} = useForm<FormDespesas>({
    resolver: zodResolver(schema),
    criteriaMode: "all",
    mode: "all",
@@ -59,37 +59,38 @@ const NDespesaMobile = () => {
    data: undefined,
    valor: undefined,
    categoriaId: '',
-   image: undefined,  
+//   image: undefined,  
   },
   })
   const navigate = useNavigate();
-  const { id = 'nova' } = useParams<'id'>();
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const { id  } = useParams<'id'>();
+//  const [uploadedImage, setUploadedImage] = useState(null);
+//  const handleImageChange = (event) => {
+//  const file = event.target.files[0];
     // You can update the form state or save the image for later use.
-    setUploadedImage(file);
-  };
+//    setUploadedImage(file);
+//  };
 
-  const createDespesa = async (data: FormValuesDespesas) => {
-    try {
-      // Aqui, você pode usar o serviço DespesasService para enviar os dados ao backend
-      const response = await DespesasService.create(data);
+  function createDespesa(data: FormDespesas) {
 
-      // Verifica se houve algum erro no backend
-      if (response instanceof Error) {
-        alert(response.message);
-      } else {
-        // Se não houver erros, você pode navegar para outra página ou realizar ações necessárias
-        console.log(data)
-        alert('Despesa criada com sucesso!');
-        navigate('/despesas'); // ou a rota desejada
-      }
-    } catch (error) {
-      console.error(error);
-      // Trate outros erros conforme necessário
+    const despesa = {
+      viagemId: id,
+      descricao: data.descricao,
+      data: data.data,
+      valor: data.valor,
+      categoriaId: data.categoriaId,
     }
-  };
+    
+    DespesasService.create(despesa)
+    .then(response => {
+      // Handle the response as needed
+      console.log('Despesa criada', response);
+    })
+    .catch(error => {
+      // Handle the error
+      console.error('Error', error);
+    });
+  }
 
   return (
   <div>
@@ -101,8 +102,7 @@ const NDespesaMobile = () => {
     <Typography id="modal-modal-title" variant="h6" component="h2">Nova Despesa</Typography>
    </Box>
 
-   <FormControl
-   sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 2, margin: 5}}>
+   <FormControl sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 2, margin: 5}}>
       
   {/* INPUT DE TEXTO - DESCRIÇÃO */}
 
@@ -110,14 +110,13 @@ const NDespesaMobile = () => {
     name="descricao"
     control={control}
     render={({ field }) => (
+
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1}}>
       <InputLabel htmlFor="component-outlined">Descrição</InputLabel>
-      <OutlinedInput
-      sx={{width: '100%', height: '56px', backgroundColor: '#FFFFFF'}}
-      id="component-outlined"
-      label="Descrição"
-      {...field}/>
-      {errors.descricao && <Typography color="error">{errors.descricao?.message}</Typography>}
+      <OutlinedInput 
+        sx={{width: '100%', height: '56px', backgroundColor: '#FFFFFF'}} id="component-outlined" label="Descrição"
+        {...field}/>
+        {errors.descricao && <Typography color="error">{errors.descricao?.message}</Typography>}
     </Box>
     )} 
     />
@@ -192,7 +191,7 @@ const NDespesaMobile = () => {
     type="file"
     accept="image/*" // Specify the accepted file types (e.g., images)
     style={{ display: 'none' }}
-    onChange={handleImageChange}
+//    onChange={handleImageChange}
     />
    </IconButton>
    </Box>

@@ -1,33 +1,33 @@
-import { FormControl, FormLabel, 
-  styled, FormControlLabel, RadioGroup, 
-  Button, InputLabel, OutlinedInput, InputAdornment, 
-  TextField, Box, Radio, Typography } from '@mui/material';
+import { FormControl, FormLabel, styled, FormControlLabel, RadioGroup, Button, InputLabel, OutlinedInput, InputAdornment, TextField, Box, Radio, Typography } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CloudUpload } from '@mui/icons-material';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from 'react';
+
+//import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
+
+import { DespesasService } from '../../../services/api/despesas/DespesasService';
 
 const schema = z.object({
-  descriptionDes: z.string().min(1, 'Descrição é obrigatória')
+  descricao: z.string().min(1, 'Descrição é obrigatória')
   .max(100),
 
-  dateDes: z.coerce.date({
+  data: z.coerce.date({
   errorMap: () => {
   return {
   message: 'Selecione uma data'
   }}}),
 
-  valueDes: z.coerce.number().min(0.01, {
+  valor: z.coerce.number().min(0.01, {
     message: 'Informe um valor válido.',
   }),
-  categorieDes: z.string().min(1, 'Selecione uma opção.'),
+  categoriaId: z.string().min(1, 'Selecione uma opção.'),
 
-  imageDes: z.instanceof(FileList).transform(list => list.item(0)).optional(),
-
+//  imagem: z.instanceof(FileList).transform(list => list.item(0)).optional(),
 }).required();
 
 const VisuallyHiddenInput = styled('input')({
@@ -42,36 +42,54 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-type FormValuesDespesas =  z.infer<typeof schema>;
+type FormDespesas =  z.infer<typeof schema>;
 
 const NovaDespesaForm = () => {
-  const [output, setOutput] = useState('')
+  const { id } = useParams(); 
   const { control, 
     handleSubmit, 
-    formState: { errors }} = useForm<FormValuesDespesas>({
+    formState: { errors }} = useForm<FormDespesas>({
     resolver: zodResolver(schema),
     criteriaMode: "all",
     mode: "all",
     defaultValues: {
-     descriptionDes: '',
-     dateDes: undefined,
-     valueDes: 0,
-     categorieDes: '',
-     imageDes: undefined,  
+     descricao: '',
+     data: undefined,
+     valor: 0,
+     categoriaId: '',
+  //   imagem: undefined,  
   },
   })
 
-  const [uploadedImage, setUploadedImage] = useState(null);
+//  const [uploadedImage, setUploadedImage] = useState(null);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+//  const handleImageChange = (event) => {
+//    const file = event.target.files[0];
     // You can update the form state or save the image for later use.
-    setUploadedImage(file);
-  };
+//    setUploadedImage(file);
+//  };
 
-  function createDespesa(data:any) {
-  setOutput(JSON.stringify(data, null, 2))}
+  function createDespesa(data: FormDespesas) {
 
+    const despesa = {
+      viagemId: id,
+      descricao: data.descricao,
+      data: data.data,
+      valor: data.valor,
+      categoriaId: data.categoriaId,
+    }
+    
+    DespesasService.create(despesa)
+    .then(response => {
+      // Handle the response as needed
+      console.log('Despesa criada', response);
+    })
+    .catch(error => {
+      // Handle the error
+      console.error('Error', error);
+    });
+  }
+  
   return (
     
   <form onSubmit={handleSubmit(createDespesa)}>
@@ -80,7 +98,7 @@ const NovaDespesaForm = () => {
       
   {/* INPUT TEXTO - DESCRIÇÃO */}
   <Controller
-    name="descriptionDes"
+    name="descricao"
     control={control}
     render={({ field }) => (
     <div>
@@ -90,7 +108,7 @@ const NovaDespesaForm = () => {
     id="component-outlined"
     label="Descrição"
     {...field}/>
-    {errors.descriptionDes && (<Typography color="error">{errors.descriptionDes.message}</Typography>)}
+    {errors.descricao && (<Typography color="error">{errors.descricao.message}</Typography>)}
     </div>
     )}
   />
@@ -102,7 +120,7 @@ const NovaDespesaForm = () => {
   {/* INPUT DA DATA */}
   <Box>
   <Controller
-   name="dateDes"
+   name="data"
    control={control}
    render={({ field }) => (
    <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -114,13 +132,13 @@ const NovaDespesaForm = () => {
    </LocalizationProvider>)}
    />
    
-   {errors.dateDes && (<Typography color="error">{errors.dateDes.message}</Typography>)}
+   {errors.data && (<Typography color="error">{errors.data.message}</Typography>)}
   </Box>
   
   {/* INPUT VALOR */}
    <Box>
    <Controller
-    name="valueDes"
+    name="valor"
     control={control}
     render={({ field }) => (
     <TextField
@@ -132,7 +150,7 @@ const NovaDespesaForm = () => {
     </TextField>
     )} />
        
-    {errors.valueDes && ( <Typography color="error">{errors.valueDes.message}</Typography>  )}
+    {errors.valor && ( <Typography color="error">{errors.valor.message}</Typography>  )}
    </Box>
    </Box>
    
@@ -141,16 +159,16 @@ const NovaDespesaForm = () => {
     <FormLabel sx={{ marginTop: 3 }} id="demo-row-radio-buttons-group-label">Categoria</FormLabel>
     
     <Controller
-    name="categorieDes"
+    name="categoriaId"
     control={control}
     render={({ field }) => (
     <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" {...field}>
-    <FormControlLabel value="alimentação" control={<Radio />} label="Alimentação" />
-    <FormControlLabel value="locomoção" control={<Radio />} label="Locomoção" />
-    <FormControlLabel value="outros" control={<Radio />} label="Outros" />
+    <FormControlLabel value="2" control={<Radio />} label="Alimentação" />
+    <FormControlLabel value="1" control={<Radio />} label="Locomoção" />
+    <FormControlLabel value="3" control={<Radio />} label="Outros" />
     </RadioGroup> )} />
         
-    {errors.categorieDes && (<Typography color="error">{errors.categorieDes.message}</Typography>)}
+    {errors.categoriaId && (<Typography color="error">{errors.categoriaId.message}</Typography>)}
 
  
 
@@ -164,7 +182,7 @@ const NovaDespesaForm = () => {
     type="file"
     accept="image/*" // Specify the accepted file types (e.g., images)
     style={{ display: 'none' }}
-    onChange={handleImageChange}
+//    onChange={handleImageChange}
     />
    </Button>
  
