@@ -91,7 +91,6 @@ export default function DetalhesWeb () {
           alert(result.message)
         } else {
           alert('Registro apagado com sucesso!');
-          navigate('/viagens');
         }
       })
     }
@@ -293,15 +292,15 @@ return (
     
     <TableCell>
       <IconButton 
-      onClick={() => handleDeleteDespesa(Number(id))}
+      onClick={() => handleDeleteDespesa(Number(row.id))}
       aria-label="expand row" size="small" color="error">
         <RemoveCircle/>
       </IconButton>
     </TableCell>
 
     <TableCell sx={{ color: '#8D8D99'}} component="th" scope="row">{row.descricao}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left"> {formatDate(row.data)}</TableCell>
-    <TableCell sx={{ color: '#8D8D99'}} align="left">{getCategoryIcon(row.categoriaId) }</TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left"> {formatDate(row.data)} </TableCell>
+    <TableCell sx={{ color: '#8D8D99'}} align="left"> {getCategoryIcon(row.categoriaId)}</TableCell>
     <TableCell sx={{ color: '#8D8D99'}} align="left">{formatCurrency(row.valor)}</TableCell>
 
     <TableCell sx={{ color: '#8D8D99'}} align="left"> 
