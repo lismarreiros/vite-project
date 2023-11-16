@@ -25,13 +25,12 @@ const tripExpenseFactory = (
 
 const UseTripExpenses = (tripId: string) => {
   const [expenses, setExpenses] = useState<IListagemDespesas[]>([]);
-  const [total, setTotal] = useState<number>(0);
   const [loadingExpenses, setLoadingExpenses] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     getExpenses(tripId);
-  }, [tripId]);
+  }, []);
 
   const getExpenses = async (tripId: string) => {
     setLoadingExpenses(true);
@@ -49,7 +48,7 @@ const UseTripExpenses = (tripId: string) => {
       }
       const initialExpenses = [
         tripExpenseFactory(
-          0,
+          100,
           "Hotel",
           trip.valorHotel,
           trip.dataIda,
@@ -57,7 +56,7 @@ const UseTripExpenses = (tripId: string) => {
           4
         ),
         tripExpenseFactory(
-          0,
+          101,
           "Transporte",
           trip.valorTrans,
           trip.dataIda,
@@ -65,16 +64,10 @@ const UseTripExpenses = (tripId: string) => {
           5
         ),
       ];
-
+ 
       setExpenses([...initialExpenses, ...response.data]);
 
-      // total
-      const totalExpenses = expenses.reduce(
-        (total, expense) => total + expense.valor,
-        0
-      );
 
-      setTotal(totalExpenses);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -84,7 +77,7 @@ const UseTripExpenses = (tripId: string) => {
     }
   };
 
-  return { expenses, total, loadingExpenses, error };
+  return { expenses, loadingExpenses, error };
 };
 
 export default UseTripExpenses;
