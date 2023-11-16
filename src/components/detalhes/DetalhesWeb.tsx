@@ -8,8 +8,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import { useDebounce } from "../../../shared/hooks/UseDebounce";
+import UseTripExpenses from "../../../shared/hooks/UseTripExpenses";
 import { ViagensService, IListagemViagem } from "../../../services/api/viagens/ViagensService";
-import { DespesasService, IListagemDespesas } from "../../../services/api/despesas/DespesasService"
+// import { DespesasService, IListagemDespesas } from "../../../services/api/despesas/DespesasService"
 import NovaDespesaForm from './NovaDespesa';  
 import { NavBar } from "../layouts/Navbar";
 
@@ -32,93 +33,35 @@ p: 4,
 export default function DetalhesWeb () {
 const navigate = useNavigate();
 const { debounce } = useDebounce();
-const { id = 'nova' } = useParams<'id'>();
-const [rows, setRows] = useState<IListagemDespesas[]>([]);
+const { id } = useParams<'id'>();
+// const [rows, setRows] = useState<IListagemDespesas[]>([]);
 const [card, setCard] = useState<IListagemViagem>();
-const [isLoading, setIsLoading] = useState(true);
-const [totalAmount, setTotalAmount] = useState<number>(0);
+// const [isLoading, setIsLoading] = useState(true);
+// const [totalAmount, setTotalAmount] = useState<number>(0);
 const [diferenca, setDiferenca] = useState(0);
 
+// called use trip expenses hook
+const { expenses, total, loadingExpenses, } = UseTripExpenses(id || '0');
 
 useEffect(() => {
-  setIsLoading(true);
+  // setIsLoading(true);
 
   debounce(() => {
     ViagensService.getById(Number(id))
       .then((result) => {
-        setIsLoading(false);
+        // setIsLoading(false);
 
         if (result instanceof Error) {
           alert(result.message);
           navigate('/viagens');
         } else {
-          console.log(result);
-          setCard(result);
+          // console.log(result);
+          setCard(result); 
         }
       });
   });
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-useEffect(() => {
-  setIsLoading(true);
-
-  debounce(() => {
-  DespesasService.getById(Number(id))
-    .then((result) => {
-     setIsLoading(false);
-
-     if (result instanceof Error) {
-      alert(result.message);
-      } else {
-      
-      const valorHotel = card ? card.valorHotel : 0;
-      const valorTrans = card ? card.valorTrans : 0;
-      const dataIda = card ? card.dataIda : new Date();
-      const idViagem = card ? card.id : 0;
-
-      const despesasDaViagem: IListagemDespesas[] = [
-        {
-          id: 100,
-          descricao: 'Hotel',
-          valor: valorHotel,
-          data: dataIda,
-          viagemId: idViagem,
-          categoriaId: 4
-        },
-        {
-          id: 101,
-          descricao: 'Transporte',
-          valor: valorTrans,
-          data: dataIda,
-          viagemId: idViagem,
-          categoriaId: 5
-        },
-      ];
-     
-      const totalAmountFromDespesas = despesasDaViagem.reduce(
-        (acc, despesa) => acc + despesa.valor,
-        0
-      );
-      
-      const totalAmountFromRows = result.data.reduce(
-        (acc, row) => acc + row.valor,
-        0
-      );
-
-      const totalAmount = totalAmountFromRows + totalAmountFromDespesas || 0;
-      const diferencaCalculada = totalAmount - (card?.adiantamento || 0);
-      
-      setRows([...result.data, ...despesasDaViagem]);
-      
-      setTotalAmount(totalAmount);
-      setDiferenca(diferencaCalculada);
-      }
-    });
-  });
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [id]);
-
 
 {/* ícones da categoria */}
 const getCategoryIcon = (category : number) => {
@@ -278,7 +221,7 @@ return (
       <RemoveCircle fontSize="small" sx={{color:'#7C7C8A'}}/>
       <Typography variant="subtitle1" color="text.secondary">Total dos Custos</Typography>
       </Box>
-      <Typography sx={{ fontWeight: 500}}>{formatCurrency(totalAmount)}</Typography>
+      <Typography sx={{ fontWeight: 500}}>{formatCurrency(total)}</Typography>
     </Box>
 
   </Box>
@@ -344,7 +287,7 @@ return (
 
     <TableBody>
    
-    {rows.map((row => (
+    {expenses.map((row => (
     <TableRow
     key={row.id}
     sx={{ '&:last-child td, &:last-child th': { border: 0 }, 
@@ -375,7 +318,7 @@ return (
     )))}
     </TableBody>
     <TableFooter>
-    {isLoading && (
+    {loadingExpenses && (
        <TableRow>
        <TableCell colSpan={6}>
          <LinearProgress variant='indeterminate' />
