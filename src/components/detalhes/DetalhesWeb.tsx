@@ -14,7 +14,6 @@ import { ViagensService, IListagemViagem } from "../../../services/api/viagens/V
 import NovaDespesaForm from './NovaDespesa';  
 import { NavBar } from "../layouts/Navbar";
 
-
 {/* style do Modal */}
 const style = {
 position: 'absolute' as const,
@@ -37,11 +36,11 @@ const { id } = useParams<'id'>();
 // const [rows, setRows] = useState<IListagemDespesas[]>([]);
 const [card, setCard] = useState<IListagemViagem>();
 // const [isLoading, setIsLoading] = useState(true);
-// const [totalAmount, setTotalAmount] = useState<number>(0);
+const [totalAmount, setTotalAmount] = useState<number>(0);
 const [diferenca, setDiferenca] = useState(0);
 
 // called use trip expenses hook
-const { expenses, total, loadingExpenses, } = UseTripExpenses(id || '0');
+const { expenses, loadingExpenses } = UseTripExpenses(id || '0');
 
 useEffect(() => {
   // setIsLoading(true);
@@ -62,6 +61,15 @@ useEffect(() => {
   });
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    const totalExpenses = expenses.reduce(
+        (total, expense) => total + expense.valor,
+        0
+      );
+      setTotalAmount(totalExpenses);
+      if (card) setDiferenca(card.adiantamento - totalExpenses);
+  }, [expenses]);
 
 {/* ícones da categoria */}
 const getCategoryIcon = (category : number) => {
@@ -221,7 +229,7 @@ return (
       <RemoveCircle fontSize="small" sx={{color:'#7C7C8A'}}/>
       <Typography variant="subtitle1" color="text.secondary">Total dos Custos</Typography>
       </Box>
-      <Typography sx={{ fontWeight: 500}}>{formatCurrency(total)}</Typography>
+      <Typography sx={{ fontWeight: 500}}>{formatCurrency(totalAmount)}</Typography>
     </Box>
 
   </Box>

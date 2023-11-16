@@ -23,9 +23,9 @@ type TDespesasComTotalCount = {
     totalCount: number;
 }
 
-const getAll = async (page = 1, filter= ''): Promise<TDespesasComTotalCount| Error> => {
+const getAll = async (id: number, page = 1, filter= ''): Promise<TDespesasComTotalCount| Error> => {
     try {
-        const urlRelativa = `:id/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
+        const urlRelativa = `${id}/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
         
         const { data, headers } = await Api.get(urlRelativa);
 
