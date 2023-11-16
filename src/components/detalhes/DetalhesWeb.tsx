@@ -83,9 +83,9 @@ export default function DetalhesWeb () {
     }
   }
 
-  const handleDeleteDespesa = () => {
+  const handleDeleteDespesa = (id: number) => {
     if (confirm('Realmente dejesa apagar?')) {
-      DespesasService.deletebyId()
+      DespesasService.deletebyId(id)
       .then(result => {
         if (result instanceof Error) {
           alert(result.message)
@@ -293,7 +293,7 @@ return (
     
     <TableCell>
       <IconButton 
-      onClick={() => handleDeleteDespesa()}
+      onClick={() => handleDeleteDespesa(Number(id))}
       aria-label="expand row" size="small" color="error">
         <RemoveCircle/>
       </IconButton>
