@@ -48,6 +48,20 @@ const DetalhesMobile = () => {
     if (card) setDiferenca(card.adiantamento - totalExpenses);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses]);
+
+  const handleDelete = (id: number) => {
+    if (confirm('Realmente dejesa apagar?')) {
+      ViagensService.deletebyId(id)
+      .then(result => {
+        if (result instanceof Error) {
+          alert(result.message)
+        } else {
+          alert('Registro apagado com sucesso!');
+          navigate('/viagens');
+        }
+      })
+    }
+  }
     
   const getCategoryIcon = (category : number) => {
     switch (category) {   
@@ -103,7 +117,7 @@ const DetalhesMobile = () => {
       </IconButton>
   
       <IconButton
-      onClick={() => navigate('')} size="small" 
+      onClick={() => handleDelete(Number(id))} size="small" 
       sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
         <DeleteOutline />
       </IconButton>

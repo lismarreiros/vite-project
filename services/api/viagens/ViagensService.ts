@@ -35,7 +35,7 @@ const getAll = async (page = 1, filter= ''): Promise<TViagensComTotalCount | Err
     try {
         const urlRelativa = `/viagens?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
         
-        const { data, headers } = await Api.get(urlRelativa);
+        const { data, headers } = await Api().get(urlRelativa);
 
         if (data) {
             return {
@@ -53,7 +53,7 @@ const getAll = async (page = 1, filter= ''): Promise<TViagensComTotalCount | Err
 
 const getById = async (id: number): Promise<IListagemViagem | Error> => {
     try {
-        const { data } = await Api.get(`/viagens/${id}`)
+        const { data } = await Api().get(`/viagens/${id}`)
         
         if (data) {
             return data;
@@ -68,7 +68,7 @@ const getById = async (id: number): Promise<IListagemViagem | Error> => {
 
 const create = async (dados: Omit<IDetalheViagem, 'id'>): Promise<number | Error> => {
     try {
-        const { data } = await Api.post<IDetalheViagem>('/viagens', dados);
+        const { data } = await Api().post<IDetalheViagem>('/viagens', dados);
         
         if (data) {
           return data.id;
@@ -83,7 +83,7 @@ const create = async (dados: Omit<IDetalheViagem, 'id'>): Promise<number | Error
 
 const updateById = async (id: number, dados: IDetalheViagem): Promise<void | Error> => {
     try {
-        await Api.put(`/viagens/${id}`, dados)
+        await Api().put(`/viagens/${id}`, dados)
     } catch (error) {
         console.error(error);
         return new Error((error as { message: string }).message || 'Erro ao atualizar os registros.')
@@ -92,7 +92,7 @@ const updateById = async (id: number, dados: IDetalheViagem): Promise<void | Err
 
 const deletebyId = async (id: number): Promise<void | Error> => {
     try {
-        await Api.delete(`/viagens/${id}`)
+        await Api().delete(`/viagens/${id}/`)
     } catch (error) {
         console.error(error);
         return new Error((error as { message: string }).message || 'Erro ao deletar os registros.')

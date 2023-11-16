@@ -27,7 +27,7 @@ const getAll = async (id: number, page = 1, filter= ''): Promise<TDespesasComTot
     try {
         const urlRelativa = `${id}/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
         
-        const { data, headers } = await Api.get(urlRelativa);
+        const { data, headers } = await Api().get(urlRelativa);
 
         if (data) {
             return {
@@ -45,7 +45,7 @@ const getAll = async (id: number, page = 1, filter= ''): Promise<TDespesasComTot
 
 const getById = async (id: number ): Promise<TDespesasComTotalCount | Error> => {
     try {
-        const { data, headers } = await Api.get(`${id}/despesas/`)
+        const { data, headers } = await Api().get(`${id}/despesas/`)
       
         if (data) {
             return {
@@ -63,7 +63,7 @@ const getById = async (id: number ): Promise<TDespesasComTotalCount | Error> => 
 
 const create = async (dados: Omit<INovaDespesa, 'id'>): Promise<number | Error> => {
     try {
-        const { data } = await Api.post<INovaDespesa>(`/despesas/`, dados);
+        const { data } = await Api().post<INovaDespesa>(`/despesas/`, dados);
         
         if (data) {
           return data.id;
@@ -78,7 +78,7 @@ const create = async (dados: Omit<INovaDespesa, 'id'>): Promise<number | Error> 
 
 const updateById = async (id: number, dados: IListagemDespesas): Promise<void | Error> => {
     try {
-        await Api.put(`:id/despesas/${id}`, dados)
+        await Api().put(`:id/despesas/${id}`, dados)
     } catch (error) {
         console.error(error);
         return new Error((error as { message: string }).message || 'Erro ao atualizar os registros.')
@@ -87,7 +87,7 @@ const updateById = async (id: number, dados: IListagemDespesas): Promise<void | 
 
 const deletebyId = async (id: number): Promise<void | Error> => {
     try {
-        await Api.delete(`:id/despesas/${id}`)
+        await Api().delete(`${id}/despesas/${id}`)
     } catch (error) {
         console.error(error);
         return new Error((error as { message: string }).message || 'Erro ao deletar os registros.')

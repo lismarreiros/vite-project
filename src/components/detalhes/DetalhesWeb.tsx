@@ -11,6 +11,7 @@ import UseTripExpenses from "../../../shared/hooks/UseTripExpenses";
 import { ViagensService, IListagemViagem } from "../../../services/api/viagens/ViagensService";
 import NovaDespesaForm from './NovaDespesa';  
 import { NavBar } from "../layouts/Navbar";
+import { DespesasService } from "../../../services/api/despesas/DespesasService";
 
 
 {/* style do Modal */}
@@ -67,6 +68,35 @@ export default function DetalhesWeb () {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses]);
+
+  const handleDelete = (id: number) => {
+    if (confirm('Realmente dejesa apagar?')) {
+      ViagensService.deletebyId(id)
+      .then(result => {
+        if (result instanceof Error) {
+          alert(result.message)
+        } else {
+          alert('Registro apagado com sucesso!');
+          navigate('/viagens');
+        }
+      })
+    }
+  }
+
+  const handleDeleteDespesa = () => {
+    if (confirm('Realmente dejesa apagar?')) {
+      DespesasService.deletebyId()
+      .then(result => {
+        if (result instanceof Error) {
+          alert(result.message)
+        } else {
+          alert('Registro apagado com sucesso!');
+          navigate('/viagens');
+        }
+      })
+    }
+  }
+    
 
   {/* ícones da categoria */}
   const getCategoryIcon = (category : number) => {
@@ -133,7 +163,7 @@ return (
     startIcon={<LocalPrintshopOutlined />}>Imprimir</Button>
 
    <Button
-    onClick={() => navigate('/viagens')}
+    onClick={() => handleDelete(Number(id))}
     size="medium" 
     sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
     startIcon={<DeleteOutline />}>Deletar</Button>
@@ -262,7 +292,9 @@ return (
     sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor:'#FFFFFF', boxShadow: 0.75, borderRadius: 0, color: '#8D8D99' }}>
     
     <TableCell>
-      <IconButton aria-label="expand row" size="small" color="error">
+      <IconButton 
+      onClick={() => handleDeleteDespesa()}
+      aria-label="expand row" size="small" color="error">
         <RemoveCircle/>
       </IconButton>
     </TableCell>
