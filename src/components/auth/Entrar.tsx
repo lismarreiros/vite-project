@@ -7,8 +7,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const loginSchema = z.object({
-  email: z.string().email('Informe um email válido'),
-  senha: z.string().min(6, 'A senha precisa ter pelo menos 6 caracteres')
+  email: z.string().email(),
+  senha: z.string()
 }).required()
 
 type handleLoginFormData = z.infer<typeof loginSchema>;
@@ -38,8 +38,10 @@ const TextFieldLogin = styled(TextField)(({ theme }) => ({
 }));
 
 export const Entrar: React.FC<ILoginProps>= ({ children }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<handleLoginFormData>({
-    resolver: zodResolver(loginSchema)
+  const { register, handleSubmit } = useForm<handleLoginFormData>({
+    resolver: zodResolver(loginSchema),
+    criteriaMode: "all",
+    mode: "all",
   });
 
   const { isAuthenticated, login } = useAuthContext();
@@ -60,17 +62,16 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
    <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'row'}}>
     
     <form onSubmit={handleSubmit(handleLogin)}>
-     <BoxLogin sx={{ width: '502px', height: '520px', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, backgroundColor: '#FFFFFF', padding: 4, margin: 2, borderRadius: 3, boxShadow: 1, marginTop:7 }}>
+     <BoxLogin sx={{ width: '502px', height: '620px', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, backgroundColor: '#FFFFFF', padding: 4, margin: 2, borderRadius: 3, boxShadow: 1, marginTop:7 }}>
      
       <Typography variant='h6' sx={{textAlign: 'center', margin: 2.5, color: '#323238'}}>Login</Typography>
       
-      <InputLabel sx={{ display: 'flex', flexDirection: 'column', alignSelf:'center'}}>Usuário
+      <InputLabel sx={{ display: 'flex', flexDirection: 'column', alignSelf:'center'}}>
+        Email
        <TextFieldLogin
-          label="E-mail"
           type='email'
           {...register('email')}
         ></TextFieldLogin> 
-        {errors.email && <span>{errors.email.message}</span>}
       </InputLabel>
 
    
@@ -79,13 +80,12 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
           type='password'
           {...register('senha')}
         ></TextFieldLogin>
-         {errors.senha && <span>{errors.senha.message}</span>}
       </InputLabel>
-    
    
       <Button
         type='submit'
-        sx={{backgroundColor: '#0065FF', color: '#FFFFFF', width: '126px', height: '56px', alignSelf: 'center'}}> Entrar </Button>
+        variant='contained'
+        sx={{ width: '126px', height: '56px', alignSelf: 'center'}}> Entrar </Button>
       
       <Typography sx={{ textAlign: 'center' }}variant='body2'>Ainda não possui uma conta? <Link to="/signup">Cadastre-se</Link></Typography>
      </BoxLogin>

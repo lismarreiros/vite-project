@@ -93,8 +93,7 @@ const NovaDespesaForm = () => {
   return (
     
   <form onSubmit={handleSubmit(createDespesa)}>
-  <FormControl
-  sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 3}}>
+  <FormControl sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 3}}>
       
   {/* INPUT TEXTO - DESCRIÇÃO */}
   <Controller
@@ -189,12 +188,12 @@ const NovaDespesaForm = () => {
   {/* BOTÃO DE SALVAR NOVA DESPESA */}
   
   <Box sx={{ alignSelf:'flex-end', marginTop: 2}}>
-  <Button
-  type="submit"
-  size="large" 
-  sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
-  Salvar
-  </Button>
+    <Button
+      type="submit"
+      size="large" 
+      sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
+      Salvar
+    </Button>
   </Box>
   </FormControl>
   </form>

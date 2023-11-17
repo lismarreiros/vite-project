@@ -291,11 +291,16 @@ return (
     sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor:'#FFFFFF', boxShadow: 0.75, borderRadius: 0, color: '#8D8D99' }}>
     
     <TableCell>
+      {/**
+       * renderizar o ícone apenas se o id não for 100 ou 101 (Hotel e Transporte)
+       */}
+      {(row.id !== 100 && row.id !== 101) && (
       <IconButton 
       onClick={() => handleDeleteDespesa(Number(row.id))}
       aria-label="expand row" size="small" color="error">
         <RemoveCircle/>
       </IconButton>
+      )} 
     </TableCell>
 
     <TableCell sx={{ color: '#8D8D99'}} component="th" scope="row">{row.descricao}</TableCell>

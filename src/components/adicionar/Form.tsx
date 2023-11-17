@@ -172,8 +172,8 @@ const Form = () => {
     <Steps items={steps}/>
     )}
     </form>
-    </FormProvider>
-    );
+  </FormProvider>
+  );
 }
 
 export default Form
