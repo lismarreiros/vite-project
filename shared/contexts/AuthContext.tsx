@@ -6,7 +6,7 @@ import { AuthService } from '../../services/api/auth/AuthService';
 interface IAuthContextData {
   logout: () => void;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<string | void>;
+  login: (email: string, senha: string) => Promise<string | void>;
 }
 
 const AuthContext = createContext({} as IAuthContextData);
@@ -30,8 +30,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   }, []);
 
 
-  const handleLogin = useCallback(async (email: string, password: string) => {
-    const result = await AuthService.auth(email, password);
+  const handleLogin = useCallback(async (email: string, senha: string) => {
+    const result = await AuthService.auth(email, senha);
     if (result instanceof Error) {
       return result.message;
     } else {

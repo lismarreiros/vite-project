@@ -2,7 +2,7 @@ import { Box, Typography, TextField, Button, styled, InputLabel, AppBar } from '
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../../shared/contexts';
-import React from 'react';
+import React, { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -38,6 +38,8 @@ const TextFieldLogin = styled(TextField)(({ theme }) => ({
 }));
 
 export const Entrar: React.FC<ILoginProps>= ({ children }) => {
+  const [error, setError] = useState<string|null>(null);
+
   const { register, handleSubmit } = useForm<handleLoginFormData>({
     resolver: zodResolver(loginSchema),
     criteriaMode: "all",
@@ -46,10 +48,17 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
 
   const { isAuthenticated, login } = useAuthContext();
   
-  const handleLogin = (data: handleLoginFormData) => {
-    login(data.email, data.senha);
-  }
-
+  const handleLogin = async (data: handleLoginFormData) => {
+    await login(data.email, data.senha)
+      .then(() => {
+        // Login bem-sucedido, faça o que for necessário
+      })
+      .catch((error) => {
+        console.error('Erro de login:', error);
+        setError('Usuário ou senha incorretos.');
+      });
+  };
+  
   if (isAuthenticated) 
     return (
       <>{children}</>
@@ -62,8 +71,8 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
    <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'row'}}>
     
     <form onSubmit={handleSubmit(handleLogin)}>
-     <BoxLogin sx={{ width: '502px', height: '620px', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, backgroundColor: '#FFFFFF', padding: 4, margin: 2, borderRadius: 3, boxShadow: 1, marginTop:7 }}>
-     
+     <BoxLogin sx={{ width: '502px', height: '720px', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, backgroundColor: '#FFFFFF', padding: 4, margin: 2, borderRadius: 3, boxShadow: 1, marginTop:7 }}>
+     { error && <p style={{color: 'red'}}>{error}</p>}
       <Typography variant='h6' sx={{textAlign: 'center', margin: 2.5, color: '#323238'}}>Login</Typography>
       
       <InputLabel sx={{ display: 'flex', flexDirection: 'column', alignSelf:'center'}}>
@@ -79,15 +88,16 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
         <TextFieldLogin 
           type='password'
           {...register('senha')}
-        ></TextFieldLogin>
+        ></TextFieldLogin> 
+        
       </InputLabel>
-   
+     
       <Button
         type='submit'
         variant='contained'
         sx={{ width: '126px', height: '56px', alignSelf: 'center'}}> Entrar </Button>
       
-      <Typography sx={{ textAlign: 'center' }}variant='body2'>Ainda não possui uma conta? <Link to="/signup">Cadastre-se</Link></Typography>
+      <Typography sx={{ textAlign: 'center' }} variant='body2'> Ainda não possui uma conta? <Link to="/signup">Cadastre-se</Link></Typography>
      </BoxLogin>
     
     </form>

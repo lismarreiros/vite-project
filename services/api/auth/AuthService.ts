@@ -11,7 +11,6 @@ const auth = async (email: string, senha: string): Promise<IAuth | Error> => {
         if (data) {
           return data;
         }
-
         return new Error('Erro no login.')
     } catch (error) {
         console.error(error);

@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { CadastroService } from '../../../services/api/cadastro/CadastroService';
 
 const signupSchema = z.object({
-  nome: z.string().min(3, 'Digite seu nome')
+  nome: z.string().min(1, 'Digite seu nome')
   .transform(name => {
     return name.trim().split(' ').map(word => {
       return word[0].toLocaleUpperCase().concat(word.substring(1))
@@ -46,7 +47,22 @@ const Cadastrar: React.FC = () => {
   });
 
   function createUser(data: handleSignupFormData) {
+    const usuario = {
+      nome: data.nome,
+      email: data.email,
+      senha: data.senha
+    }
     
+    CadastroService.create(usuario)
+    .then(response => {
+      // Handle the response as needed
+      console.log('Usuário cadastrado', response);
+      
+    })
+    .catch(error => {
+      // Handle the error
+      console.error('Error', error);
+    });
   }
   
  return (

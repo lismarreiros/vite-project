@@ -62,6 +62,10 @@ const DetalhesMobile = () => {
       })
     }
   }
+
+  const handleDownloadPDF = () => {
+    
+  }
     
   const getCategoryIcon = (category : number) => {
     switch (category) {   
@@ -108,7 +112,7 @@ const DetalhesMobile = () => {
     {/* BOTÕES COMPARTILHAR, DELETAR... */}
     <Stack direction="row" spacing={2} sx={{ marginTop: 7, justifyContent: 'center' }}>
  
-      <IconButton onClick={() => navigate('')} size="small" sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
+      <IconButton onClick={handleDownloadPDF} size="small" sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
         <ShareOutlined/>
       </IconButton>
   

@@ -54,23 +54,23 @@ export const SigninLinks = () => {
     </IconButton>
 
   {/* menu hidden */}
-  <Menu
-    id="demo-positioned-menu"
-    aria-labelledby="demo-positioned-button"
-    open={open}
-    onClose={() => setOpen(false)}
-    anchorOrigin={{
-    vertical: 'top',
-    horizontal: 'right'}}
-    transformOrigin={{
-    vertical: 'top',
-    horizontal: 'right'}} >
-  
-      <MenuItem>Perfil</MenuItem>
-      <MenuItem>Configurações</MenuItem>
-      <MenuItem onClick={logout}>Logout</MenuItem>
-  
-  </Menu>
+    <Menu
+      id="demo-positioned-menu"
+      aria-labelledby="demo-positioned-button"
+      open={open}
+      onClose={() => setOpen(false)}
+      anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right'}}
+      transformOrigin={{
+      vertical: 'top',
+      horizontal: 'right'}} >
+    
+        <MenuItem>Perfil</MenuItem>
+        <MenuItem>Configurações</MenuItem>
+        <MenuItem onClick={logout}>Logout</MenuItem>
+    
+    </Menu>
 </AppBar>
 )}
 

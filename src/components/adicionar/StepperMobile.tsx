@@ -141,9 +141,7 @@ return (
  type="button" 
  onClick={handleNext}
  variant="contained" >
-
-Continuar
-
+  Continuar
 </Button>
 )}
 

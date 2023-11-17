@@ -79,6 +79,7 @@ return (
  <Button 
    key="enviar" 
    type="submit"
+   variant="contained"
    sx={{width: '167px', height: '60px', backgroundColor: "#0065FF", color: 'white'}}>Enviar</Button>
   
   ) : (
