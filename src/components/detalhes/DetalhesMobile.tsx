@@ -1,15 +1,17 @@
 import { IconButton, Stack, Typography, Box, CardContent, Card, Divider,  } from '@mui/material';
-import { DeleteOutline, LocalPrintshopOutlined, ShareOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
+import { DeleteOutline, ShareOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
 AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pending, Payments } from '@mui/icons-material';
 
 
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import{ useState, useEffect } from "react";
+
 
 import { useDebounce } from "../../../shared/hooks/UseDebounce";
 import UseTripExpenses from "../../../shared/hooks/UseTripExpenses";
 import { NavBar } from '../layouts/Navbar';
 import { ViagensService, IListagemViagem } from "../../../services/api/viagens/ViagensService";
+
 
 
 const DetalhesMobile = () => {
@@ -63,10 +65,8 @@ const DetalhesMobile = () => {
     }
   }
 
-  const handleDownloadPDF = () => {
-    
-  }
-    
+
+  
   const getCategoryIcon = (category : number) => {
     switch (category) {   
       
@@ -105,21 +105,20 @@ const DetalhesMobile = () => {
     return new Date(date).toLocaleDateString('pt-BR');
   };
 
+
+
   return (
-    <div>
+    <div >
     <NavBar/>
 
     {/* BOTÕES COMPARTILHAR, DELETAR... */}
     <Stack direction="row" spacing={2} sx={{ marginTop: 7, justifyContent: 'center' }}>
  
-      <IconButton onClick={handleDownloadPDF} size="small" sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
+      <IconButton size="small" sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
         <ShareOutlined/>
       </IconButton>
-  
-      <IconButton onClick={() => navigate('')} size="small" sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
-        <LocalPrintshopOutlined/>
-      </IconButton>
-  
+
+
       <IconButton
       onClick={() => handleDelete(Number(id))} size="small" 
       sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}>
@@ -127,12 +126,13 @@ const DetalhesMobile = () => {
       </IconButton>
       
     </Stack>
+
     
     <Typography variant="subtitle1" sx={{ marginLeft: 3, marginTop: 5, fontWeight: 'bold', color: '#3C3C3C'}}>Detalhes da Viagem #{id}</Typography>
-    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 5}}>
+    <Box  sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 5}}>
 
     {/* DETALHES FORNECIDOS PELO FORMULÁRIO */}
-    <Card sx={{ width: '460px', backgroundColor: '#F5F5F6', boxShadow: 'none'}}>
+    <Card  sx={{ width: '460px', backgroundColor: '#F5F5F6', boxShadow: 'none'}}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 3}}>
 
       {/* DESTINO */}
@@ -245,7 +245,6 @@ const DetalhesMobile = () => {
     </Card> 
   </Stack>
   )))}
-
 </div>
 )}
 

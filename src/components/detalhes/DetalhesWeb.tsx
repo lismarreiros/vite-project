@@ -4,7 +4,8 @@ import { DeleteOutline, LocalPrintshopOutlined, ShareOutlined, FmdGoodOutlined, 
 AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pending, Payments } from '@mui/icons-material';
 
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import  ReactToPrint  from 'react-to-print'
 
 import { useDebounce } from "../../../shared/hooks/UseDebounce";
 import UseTripExpenses from "../../../shared/hooks/UseTripExpenses";
@@ -142,24 +143,41 @@ export default function DetalhesWeb () {
     return new Date(date).toLocaleDateString('pt-BR');
   };
 
+  const componentRef = useRef<HTMLDivElement>(null);
+
 return (
-  <Box>
+  <Box ref={componentRef}>
    <NavBar/>
 
    {/*BOTÕES */}
    <Stack direction="row" spacing={2} sx={{ marginTop: 10, marginLeft: 12, }}>
     
    <Button 
-    onClick={() => navigate('')}
+    onClick={() => navigator.share({
+      title: document.title,
+      text: "Spider pig",
+      url: window.location.href
+    })
+    .then(() => console.log('Successfully shared! <3'))
+    .catch(() => console.log('Oh oh! Something went wrong:'))}
     size="medium" 
     sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
     startIcon={<ShareOutlined />}>Compartilhar</Button>
 
-   <Button
-    onClick={() => navigate('')}
-    size="medium" 
-    sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
-    startIcon={<LocalPrintshopOutlined />}>Imprimir</Button>
+    <ReactToPrint
+      trigger={() => (
+      <Button
+       size="medium" 
+       sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
+       startIcon={<LocalPrintshopOutlined />}>Imprimir</Button>
+       )}
+      content={() => componentRef.current}
+      pageStyle="
+      @page {
+        size: A4 landscape;
+      }"
+      />
+
 
    <Button
     onClick={() => handleDelete(Number(id))}
@@ -170,7 +188,7 @@ return (
    </Stack>
  
    {/* VIAGEM */}
-
+  <div>
    <Typography variant="h6" sx={{ marginLeft: 12, marginTop: 5, fontWeight: 'bold', color: '#3C3C3C'}}>Detalhes da Viagem # {id}</Typography>
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', gap: 14}}>
 
@@ -330,8 +348,9 @@ return (
 </Table>
 </TableContainer>
 </Box>
-</Box>
 
+</Box>
+</div>
 <Modal
   open={open}
   onClose={handleClose}

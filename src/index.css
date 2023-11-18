@@ -5,3 +5,17 @@ body {
   margin: 0;
 }
 
+@media print {
+  body {
+    margin: 0; /* Remover margens padrão do corpo para aproveitar mais espaço na folha */
+  }
+
+  @page {
+    size: A4; /* Define o tamanho da folha para A4 */
+    margin: 20mm; /* Adiciona margens à folha A4 */
+  }
+
+  /* Adicione outros estilos específicos para impressão conforme necessário */
+}
+
+

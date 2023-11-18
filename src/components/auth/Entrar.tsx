@@ -21,7 +21,7 @@ const BoxLogin = styled(Box)(({ theme }) => ({
 
   [theme.breakpoints.down('sm')]: {
     width: '305px',
-    height: '422px',
+    height: '455px',
     marginTop: 25,
   }
 }));
@@ -49,14 +49,11 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
   const { isAuthenticated, login } = useAuthContext();
   
   const handleLogin = async (data: handleLoginFormData) => {
-    await login(data.email, data.senha)
-      .then(() => {
-        // Login bem-sucedido, faça o que for necessário
-      })
-      .catch((error) => {
-        console.error('Erro de login:', error);
-        setError('Usuário ou senha incorretos.');
-      });
+     const response = await login(data.email, data.senha)
+     if (response instanceof Error) {
+      console.log(error)
+      setError('Usuário ou senha incorretos.')
+     }
   };
   
   if (isAuthenticated) 
@@ -72,9 +69,9 @@ export const Entrar: React.FC<ILoginProps>= ({ children }) => {
     
     <form onSubmit={handleSubmit(handleLogin)}>
      <BoxLogin sx={{ width: '502px', height: '720px', display: 'flex', justifyContent: 'center', flexDirection: 'column', gap: 3, backgroundColor: '#FFFFFF', padding: 4, margin: 2, borderRadius: 3, boxShadow: 1, marginTop:7 }}>
-     { error && <p style={{color: 'red'}}>{error}</p>}
+     
       <Typography variant='h6' sx={{textAlign: 'center', margin: 2.5, color: '#323238'}}>Login</Typography>
-      
+      { error && <Typography style={{color: 'red', textAlign: 'center'}}>{error}</Typography>}
       <InputLabel sx={{ display: 'flex', flexDirection: 'column', alignSelf:'center'}}>
         Email
        <TextFieldLogin
