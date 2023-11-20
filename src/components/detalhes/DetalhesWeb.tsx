@@ -5,7 +5,8 @@ AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pendi
 
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import  ReactToPrint  from 'react-to-print'
+import  ReactToPrint  from 'react-to-print';
+import html2canvas from "html2canvas";
 
 import { useDebounce } from "../../../shared/hooks/UseDebounce";
 import UseTripExpenses from "../../../shared/hooks/UseTripExpenses";
@@ -145,6 +146,24 @@ export default function DetalhesWeb () {
 
   const componentRef = useRef<HTMLDivElement>(null);
 
+  async function onShare(componentRef: React.RefObject<HTMLDivElement>) {
+    if (!componentRef.current) {
+      return;
+    }
+    const canvas = await html2canvas(componentRef.current);
+    const dataUrl = canvas.toDataURL();
+    const blob = await (await fetch(dataUrl)).blob();
+    const filesArray: File[] = [new File([blob], 'htmldiv.png', { type: blob.type, lastModified: new Date().getTime() })];
+    const shareData = {
+      files: filesArray,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    navigator.share(shareData as any).then(() => {
+      console.log('Shared successfully');
+    });
+  }
+  
+
 return (
   <Box ref={componentRef}>
    <NavBar/>
@@ -153,13 +172,7 @@ return (
    <Stack direction="row" spacing={2} sx={{ marginTop: 10, marginLeft: 12, }}>
     
    <Button 
-    onClick={() => navigator.share({
-      title: document.title,
-      text: "Spider pig",
-      url: window.location.href
-    })
-    .then(() => console.log('Successfully shared! <3'))
-    .catch(() => console.log('Oh oh! Something went wrong:'))}
+    onClick={onShare.bind(onShare, componentRef)}
     size="medium" 
     sx={{ backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5}}
     startIcon={<ShareOutlined />}>Compartilhar</Button>

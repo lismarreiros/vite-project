@@ -38,6 +38,8 @@ export default function CardViagem({ viagem }: CardViagemProps) {
     return new Date(date).toLocaleDateString('pt-BR');
   };
 
+  
+
 return (
   <>
 
@@ -51,7 +53,7 @@ return (
 
     <Box sx={{ display:'flex', flexDirection: 'row', gap: 1, justifyContent: 'space-evenly'}}>
         
-        <Typography sx={{ fontSize: 12 }} color="inherit" gutterBottom>{viagem.id}</Typography>
+        <Typography sx={{ fontWeight:'bold', fontSize: 14 }} color="inherit" gutterBottom>{viagem.id}</Typography>
         <br/>
         <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, justifyContent: 'center', alignItems: 'center'}}>
           <LocationOn fontSize="small" sx={{color:'#7C7C8A'}}/>
@@ -82,7 +84,7 @@ return (
  
     <Typography variant="body2" color="text.secondary">
       <br/>
-      {'Postado há 12 dias'}
+      
     </Typography>
   
 </CardContent>

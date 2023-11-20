@@ -6,7 +6,7 @@ import { CloudUpload } from '@mui/icons-material';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-//import { useState } from 'react';
+import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ const schema = z.object({
   }),
   categoriaId: z.string().min(1, 'Selecione uma opção.'),
 
-//  imagem: z.instanceof(FileList).transform(list => list.item(0)).optional(),
+  imagem: z.instanceof(FileList).transform(list => list.item(0)).optional(),
 }).required();
 
 const VisuallyHiddenInput = styled('input')({
@@ -57,17 +57,18 @@ const NovaDespesaForm = () => {
      data: undefined,
      valor: 0,
      categoriaId: '',
-  //   imagem: undefined,  
+     imagem: undefined,  
   },
   })
 
-//  const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
-//  const handleImageChange = (event) => {
-//    const file = event.target.files[0];
-    // You can update the form state or save the image for later use.
-//    setUploadedImage(file);
-//  };
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+//You can update the form state or save the image for later use.
+    setUploadedImage(file);
+  };
+
 
   function createDespesa(data: FormDespesas) {
 
@@ -181,7 +182,7 @@ const NovaDespesaForm = () => {
     type="file"
     accept="image/*" // Specify the accepted file types (e.g., images)
     style={{ display: 'none' }}
-//    onChange={handleImageChange}
+    onChange={handleImageChange}
     />
    </Button>
  

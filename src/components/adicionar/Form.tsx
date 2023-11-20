@@ -48,7 +48,8 @@ message: 'Informe  um valor.'
 }}})
 .positive({message:'Digite um número válido'}),
 
-//imagemTrans: z.instanceof(FileList).transform(list => list.item(0)),
+imagemTrans: z.instanceof(FileList).transform(list => list.item(0))
+.optional(),
 
 nomeHotel: z.string().min(1, {message: 'Informe um nome'}),
 
@@ -58,8 +59,8 @@ return {
 message: 'Informe  um valor.'
 }}}),
 
-//imageHotel: z.instanceof(FileList).transform(list => list.item(0))
-//.optional(),
+imageHotel: z.instanceof(FileList).transform(list => list.item(0))
+.optional(),
 
 adiantamento: z.coerce.number({
 errorMap: () => {
@@ -73,8 +74,8 @@ return {
 message: 'Selecione uma data.'
 }}}),
 
-//imageAdia: z.instanceof(FileList).transform(list => list.item(0))
-//.optional(),
+imageAdia: z.instanceof(FileList).transform(list => list.item(0))
+.optional(),
 
 }).required();
 
