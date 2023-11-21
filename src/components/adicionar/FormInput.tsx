@@ -110,6 +110,7 @@ return (
       </IconButton>
         
       <IconButton
+     
       sx={{ color: "#0065FF", backgroundColor: "#CADCF8", boxShadow: 1 }}
       component="label">
       <ImageOutlined />
@@ -118,7 +119,8 @@ return (
       </Box>
     ) : (
         
-    <Button
+    <Button 
+    {...field}
     sx={{ width: 190, height: 50, gap: 1 }}
     size="medium"
     component="label"

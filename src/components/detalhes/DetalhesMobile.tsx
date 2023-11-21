@@ -51,6 +51,7 @@ const DetalhesMobile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses]);
 
+
   const handleDelete = (id: number) => {
     if (confirm('Realmente dejesa apagar?')) {
       ViagensService.deletebyId(id)
@@ -65,8 +66,6 @@ const DetalhesMobile = () => {
     }
   }
 
-
-  
   const getCategoryIcon = (category : number) => {
     switch (category) {   
       

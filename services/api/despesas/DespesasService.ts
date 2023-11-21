@@ -16,6 +16,7 @@ interface INovaDespesa {
     valor: number;
     data: Date;
     categoriaId: string;
+    imagem: string;
 }
 
 type TDespesasComTotalCount = {

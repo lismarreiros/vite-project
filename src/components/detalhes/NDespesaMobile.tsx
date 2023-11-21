@@ -3,7 +3,6 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ImageOutlined, RemoveCircle, CameraAltOutlined } from "@mui/icons-material";
 import { NavBar } from "../layouts/Navbar";
-import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from 'react';
@@ -27,7 +26,7 @@ const schema = z.object({
   }),
   categoriaId: z.string().min(1, 'Selecione uma opção.'),
 
-  image: z.instanceof(FileList).transform(list => list.item(0)).optional(),
+  imagem: z.instanceof(FileList).transform(list => list.item(0)).optional(),
 
 }).required();
 
@@ -58,19 +57,20 @@ const NDespesaMobile = () => {
    descricao: '',
    data: undefined,
    valor: undefined,
-   categoriaId: '',
-   image: undefined,  
+   categoriaId: '',  
   },
   })
 
-  const navigate = useNavigate();
   const { id  } = useParams<'id'>();
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const handleImageChange = (event) => {
-  const file = event.target.files[0];
-    // You can update the form state or save the image for later use.
-    setUploadedImage(file);
-  };
+  
+  const [uploadedImage, setUploadedImage] = useState("");
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedImage(file.name);
+    }
+    };
 
   function createDespesa(data: FormDespesas) {
 
@@ -80,6 +80,7 @@ const NDespesaMobile = () => {
       data: data.data,
       valor: data.valor,
       categoriaId: data.categoriaId,
+      imagem: uploadedImage
     }
     
     DespesasService.create(despesa)
@@ -182,7 +183,7 @@ const NDespesaMobile = () => {
       component="label">
       <CameraAltOutlined />
     </IconButton>
-   
+  
    <IconButton
    sx={{ color: "#0065FF", backgroundColor: "#CADCF8", boxShadow: 1, marginLeft: 2 }}
    component="label">
@@ -195,22 +196,23 @@ const NDespesaMobile = () => {
     onChange={handleImageChange}
     />
    </IconButton>
-   </Box>
 
+   </Box>
+  
    
 
    {/* BOTÃO DE SALVAR NOVA DESPESA */}
    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
    <Button
-   onClick={() => navigate(':id/despesas')}
-   size="large" 
-   sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
-   Voltar
+    onClick={() => history.back()}
+    size="large" 
+    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
+      Voltar
    </Button>
    <Button 
-   onClick={handleSubmit(createDespesa)}
-   type="submit" size="large"  sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
-   Salvar
+    onClick={handleSubmit(createDespesa)}
+    type="submit" size="large"  sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
+      Salvar
    </Button>
    </Box>
  

@@ -59,7 +59,7 @@ return {
 message: 'Informe  um valor.'
 }}}),
 
-imageHotel: z.instanceof(FileList).transform(list => list.item(0))
+imagemHotel: z.instanceof(FileList).transform(list => list.item(0))
 .optional(),
 
 adiantamento: z.coerce.number({
@@ -74,7 +74,7 @@ return {
 message: 'Selecione uma data.'
 }}}),
 
-imageAdia: z.instanceof(FileList).transform(list => list.item(0))
+adiantImagem: z.instanceof(FileList).transform(list => list.item(0))
 .optional(),
 
 }).required();
@@ -89,7 +89,7 @@ const sourceSteps = [{
  },
  {
  label: "Transporte",
- fields: ["valorTrans", "categoria", "imagemTrans"],
+ fields: ["valorTrans", "categoriaT", "imagemTrans"],
  Component: <Transporte />,
  hasError: false,
  },
@@ -101,7 +101,7 @@ const sourceSteps = [{
  },
  {
  label:"Adiantamento",
- fields: ["valorAdia", "dataAdia", "imageAdia"],
+ fields: ["adiantamento", "AdianData", "adiantImagem"],
  Component: <Adiantamento />,
  hasError: false,
 },

@@ -18,7 +18,7 @@ export const Adiantamento = () => {
   <Box display="flex" flexDirection="column" gap={4} marginTop={3}>
   <FormInput type="date" name="adiantData" label="Data" />
   <FormInput type="value" name="adiantamento" label="Valor"/>
-  <FormInput type="image" name="imageAdia" label="Anexo" onChangeUploadImage={handleFileUpload} />
+  <FormInput type="image" name="adiantImagem" label="Anexo" onChangeUploadImage={handleFileUpload} />
   
   {uploadedFile && (
   <List>

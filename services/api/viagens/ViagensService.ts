@@ -24,7 +24,10 @@ export interface IDetalheViagem {
     nomeHotel: string;
     valorHotel: number;
     adiantamento: number;
-    adiantData: Date; 
+    adiantData: Date;
+    imagemTrans: File | null;
+    imagemHotel: File | null;
+    adiantImagem: File | null;
 }
 type TViagensComTotalCount = {
     data: IListagemViagem[];

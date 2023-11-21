@@ -56,18 +56,18 @@ const NovaDespesaForm = () => {
      descricao: '',
      data: undefined,
      valor: 0,
-     categoriaId: '',
-     imagem: undefined,  
+     categoriaId: '',  
   },
   })
 
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState("");
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-//You can update the form state or save the image for later use.
-    setUploadedImage(file);
-  };
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedImage(file.name);
+    }
+    };
 
 
   function createDespesa(data: FormDespesas) {
@@ -78,6 +78,7 @@ const NovaDespesaForm = () => {
       data: data.data,
       valor: data.valor,
       categoriaId: data.categoriaId,
+      imagem: uploadedImage
     }
     
     DespesasService.create(despesa)

@@ -19,7 +19,7 @@ export const Hospedagem = () => {
    <Box display="flex" flexDirection="column" gap={4} marginTop={3}>
    <FormInput type="text" name="nomeHotel" label="Nome do Hotel" />
    <FormInput type="value" name="valorHotel" label="Valor"/>
-   <FormInput type="image" name="imageHotel" label="Anexo" onChangeUploadImage={handleFileUpload}  />
+   <FormInput type="image" name="imagemHotel" label="Anexo" onChangeUploadImage={handleFileUpload}  />
   
    {uploadedFile && (
     <List>

@@ -19,7 +19,7 @@ export const Transporte = () => {
    <Box display="flex" flexDirection="column" gap={4} marginTop={2}>
    <FormInput type="category" name="categoriaT" label="Tipo" />
    <FormInput type="value" name="valorTrans" label="Valor"/>
-   <FormInput type="image" name="imageTrans" label="Anexo" onChangeUploadImage={handleFileUpload} />
+   <FormInput type="image" name="imagemTrans" label="Anexo" onChangeUploadImage={handleFileUpload} />
   
    {uploadedFile && (
     <List>
