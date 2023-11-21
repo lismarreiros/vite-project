@@ -11,12 +11,12 @@ export interface IListagemDespesas {
 }
 
 interface INovaDespesa {
+    viagemId: number;
     id: number;
     descricao: string;
     valor: number;
     data: Date;
     categoriaId: string;
-    imagem: string;
 }
 
 type TDespesasComTotalCount = {
@@ -62,20 +62,32 @@ const getById = async (id: number ): Promise<TDespesasComTotalCount | Error> => 
     }
 }
 
-const create = async (dados: Omit<INovaDespesa, 'id'>): Promise<number | Error> => {
+const create = async (dados: Omit<INovaDespesa, 'id'>, imagem: File): Promise<number | Error> => {
     try {
-        const { data } = await Api().post<INovaDespesa>(`/despesas/`, dados);
-        
-        if (data) {
-          return data.id;
-        }
-
-        return new Error('Erro ao criar os registros.')
+      const formData = new FormData();
+      formData.append('descricao', dados.descricao);
+      formData.append('valor', String(dados.valor));
+      formData.append('data', dados.data.toISOString()); // ou utilize algum formato específico
+      formData.append('viagemId', String(dados.viagemId));
+      formData.append('categoriaId', String(dados.categoriaId));
+      formData.append('imagem', imagem);
+  
+      const { data } = await Api().post<INovaDespesa>('/despesas/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (data) {
+        return data.id;
+      }
+  
+      return new Error('Erro ao criar os registros.');
     } catch (error) {
-        console.error(error);
-        return new Error((error as { message: string }).message || 'Erro ao criar os registros.')
+      console.error(error);
+      return new Error((error as { message: string }).message || 'Erro ao criar os registros.');
     }
-}
+  };
 
 const updateById = async (id: number, dados: IListagemDespesas): Promise<void | Error> => {
     try {

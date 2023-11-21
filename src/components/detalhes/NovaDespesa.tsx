@@ -60,16 +60,13 @@ const NovaDespesaForm = () => {
   },
   })
 
-  const [uploadedImage, setUploadedImage] = useState("");
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setUploadedImage(file.name);
-    }
-    };
-
-
+  const [imagem, setImage] = useState('');
+  const handleImageUpload = (event) => {
+    setImage(event.target.file[0])
+    const formData = new FormData();
+    formData.append('imagem', imagem);
+  }
+  
   function createDespesa(data: FormDespesas) {
 
     const despesa = {
@@ -78,7 +75,6 @@ const NovaDespesaForm = () => {
       data: data.data,
       valor: data.valor,
       categoriaId: data.categoriaId,
-      imagem: uploadedImage
     }
     
     DespesasService.create(despesa)
@@ -174,21 +170,25 @@ const NovaDespesaForm = () => {
  
 
   {/* INPUT DE IMAGEM/ARQUIVOS */}
+  <Controller
+  name="imagem"
+  control={control}
+  render={({ field }) => (
    <Button 
-   sx={{ width: '206px', height: '56px', marginTop: 2, backgroundColor: '#0065FF'}}
-   component="label" variant="contained" startIcon={<CloudUpload />}>
-   Upload file
-   <VisuallyHiddenInput type="file" />
-    <input
-    type="file"
-    accept="image/*" // Specify the accepted file types (e.g., images)
-    style={{ display: 'none' }}
-    onChange={handleImageChange}
+    sx={{ width: '206px', height: '56px', marginTop: 2, backgroundColor: '#0065FF'}}
+    component="label" variant="contained" startIcon={<CloudUpload />}>
+      Upload file
+    <VisuallyHiddenInput type="file" />
+    <TextField
+      {...field}
+      type="file"
+      style={{ display: 'none' }}
+      onChange={handleImageUpload}
     />
    </Button>
- 
-  {/* BOTÃO DE SALVAR NOVA DESPESA */}
-  
+    )} />
+
+  {/* BOTÃO DE SALVAR NOVA DESPESA */} 
   <Box sx={{ alignSelf:'flex-end', marginTop: 2}}>
     <Button
       type="submit"
