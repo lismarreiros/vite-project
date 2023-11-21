@@ -10,6 +10,7 @@ const tripExpenseFactory = (
   descricao: string,
   valor: number,
   data: Date,
+  imagem: string = "",
   viagemId: number,
   categoriaId: number
 ) => {
@@ -18,6 +19,7 @@ const tripExpenseFactory = (
     descricao,
     valor,
     data,
+    imagem,
     viagemId,
     categoriaId,
   };
@@ -53,6 +55,7 @@ const UseTripExpenses = (tripId: string) => {
           "Hotel",
           trip.valorHotel,
           trip.dataIda,
+          "",
           Number(tripId),
           4
         ),
@@ -61,6 +64,7 @@ const UseTripExpenses = (tripId: string) => {
           "Transporte",
           trip.valorTrans,
           trip.dataIda,
+          "",
           Number(tripId),
           5
         ),
