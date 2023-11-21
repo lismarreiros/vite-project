@@ -129,6 +129,12 @@ export default function DetalhesWeb () {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // states to open modal attachments
+  const [openAttachment, setOpenAttachment] = useState(false);
+  const [attachment, setAttachment] = useState<string>();
+  const handleOpenAttachment = () => setOpenAttachment(true);
+  const handleCloseAttachment = () => setOpenAttachment(false);
+
   {/* funçao para formatar o número para valor monetário */}
   const formatCurrency = (value: number) => {
   return value.toLocaleString('pt-BR', {
@@ -327,7 +333,13 @@ return (
     <TableCell sx={{ color: '#8D8D99'}} align="left">{formatCurrency(row.valor)}</TableCell>
 
     <TableCell sx={{ color: '#8D8D99'}} align="left"> 
-      <IconButton sx={{ backgroundColor: '#CADCF8', color: '#0065FF'}} >  
+      <IconButton
+        sx={{ backgroundColor: '#CADCF8', color: '#0065FF'}}
+        onClick={() => {
+          handleOpenAttachment()
+          setAttachment(row.imagem)
+        }}  
+      >  
         <AttachFile/>
       </IconButton>
     </TableCell>
@@ -351,6 +363,21 @@ return (
 
 </Box>
 </div>
+
+{/* modal to expenses attachments */}
+<Modal
+  open={openAttachment}
+  onClose={handleCloseAttachment}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+>
+  <div>
+    <img src={`http://localhost:3333/images/${attachment}`} />
+  </div>
+</Modal>
+
+
 <Modal
   open={open}
   onClose={handleClose}

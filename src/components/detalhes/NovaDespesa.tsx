@@ -11,6 +11,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { DespesasService } from '../../../services/api/despesas/DespesasService';
+import { useState } from 'react';
 
 const schema = z.object({
   descricao: z.string().min(1, 'Descrição é obrigatória')
@@ -42,9 +43,9 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-type FormDespesas =  z.infer<typeof schema>;
+  type FormDespesas =  z.infer<typeof schema>;
 
-const NovaDespesaForm = () => {
+  const NovaDespesaForm = () => {
   const { id } = useParams(); 
   const { control, 
     handleSubmit, 
@@ -52,47 +53,36 @@ const NovaDespesaForm = () => {
     resolver: zodResolver(schema),
     criteriaMode: "all",
     mode: "all",
-    defaultValues: {
-     descricao: '',
-     data: undefined,
-     valor: 0,
-     categoriaId: '',
-  //   imagem: undefined,  
-  },
-  })
+  });
 
-//  const [uploadedImage, setUploadedImage] = useState(null);
-
-//  const handleImageChange = (event) => {
-//    const file = event.target.files[0];
-    // You can update the form state or save the image for later use.
-//    setUploadedImage(file);
-//  };
-
-  function createDespesa(data: FormDespesas) {
-
+  const [image, setImage] = useState<FileList | null>(null);
+  
+  function createDespesa(data: any) {
     const despesa = {
-      viagemId: id,
+      viagemId: Number(id),
       descricao: data.descricao,
       data: data.data,
       valor: data.valor,
       categoriaId: data.categoriaId,
     }
-    
-    DespesasService.create(despesa)
-    .then(response => {
-      // Handle the response as needed
-      console.log('Despesa criada', response);
-    })
-    .catch(error => {
-      // Handle the error
-      console.error('Error', error);
-    });
+
+    if (image) {
+      DespesasService.create(despesa, image[0])
+      .then(response => {
+        console.log('Despesa criada', response);
+      })
+      .catch(error => {
+        console.error('Error', error);
+      });
+    }
   }
   
   return (
     
-  <form onSubmit={handleSubmit(createDespesa)}>
+  <form onSubmit={(e) => {
+    e.preventDefault();
+    handleSubmit(createDespesa)(e);
+  }}>
   <FormControl sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 3}}>
       
   {/* INPUT TEXTO - DESCRIÇÃO */}
@@ -176,13 +166,7 @@ const NovaDespesaForm = () => {
    sx={{ width: '206px', height: '56px', marginTop: 2, backgroundColor: '#0065FF'}}
    component="label" variant="contained" startIcon={<CloudUpload />}>
    Upload file
-   <VisuallyHiddenInput type="file" />
-    <input
-    type="file"
-    accept="image/*" // Specify the accepted file types (e.g., images)
-    style={{ display: 'none' }}
-//    onChange={handleImageChange}
-    />
+    <VisuallyHiddenInput type="file" accept="image/*" capture="environment" onChange={(e) => setImage(e.target.files)} /> 
    </Button>
  
   {/* BOTÃO DE SALVAR NOVA DESPESA */}
