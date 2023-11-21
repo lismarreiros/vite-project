@@ -28,7 +28,6 @@ const schema = z.object({
   }),
   categoriaId: z.string().min(1, 'Selecione uma opção.'),
 
-//  imagem: z.instanceof(FileList).transform(list => list.item(0)).optional(),
 }).required();
 
 const VisuallyHiddenInput = styled('input')({

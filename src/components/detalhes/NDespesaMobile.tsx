@@ -3,10 +3,9 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ImageOutlined, RemoveCircle, CameraAltOutlined } from "@mui/icons-material";
 import { NavBar } from "../layouts/Navbar";
-import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-//import { useState } from 'react';
+import { useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { useParams } from 'react-router-dom';
 import { DespesasService } from "../../../services/api/despesas/DespesasService";
@@ -27,7 +26,6 @@ const schema = z.object({
   }),
   categoriaId: z.string().min(1, 'Selecione uma opção.'),
 
-//  image: z.instanceof(FileList).transform(list => list.item(0)).optional(),
 
 }).required();
 
@@ -59,38 +57,33 @@ const NDespesaMobile = () => {
    data: undefined,
    valor: undefined,
    categoriaId: '',
-//   image: undefined,  
   },
   })
-  const navigate = useNavigate();
+
   const { id  } = useParams<'id'>();
-//  const [uploadedImage, setUploadedImage] = useState(null);
-//  const handleImageChange = (event) => {
-//  const file = event.target.files[0];
-    // You can update the form state or save the image for later use.
-//    setUploadedImage(file);
-//  };
 
-  function createDespesa(data: FormDespesas) {
-
+  const [image, setImage] = useState<FileList | null>(null);
+  
+  function createDespesa(data: any) {
     const despesa = {
-      viagemId: id,
+      viagemId: Number(id),
       descricao: data.descricao,
       data: data.data,
       valor: data.valor,
       categoriaId: data.categoriaId,
     }
-    
-    DespesasService.create(despesa)
-    .then(response => {
-      // Handle the response as needed
-      console.log('Despesa criada', response);
-    })
-    .catch(error => {
-      // Handle the error
-      console.error('Error', error);
-    });
+
+    if (image) {
+      DespesasService.create(despesa, image[0])
+      .then(response => {
+        console.log('Despesa criada', response);
+      })
+      .catch(error => {
+        console.error('Error', error);
+      });
+    }
   }
+
 
   return (
   <div>
@@ -186,13 +179,7 @@ const NDespesaMobile = () => {
    sx={{ color: "#0065FF", backgroundColor: "#CADCF8", boxShadow: 1, marginLeft: 2 }}
    component="label">
    <ImageOutlined />
-   <VisuallyHiddenInput type="file" accept="image/*" capture="environment" />
-    <input
-    type="file"
-    accept="image/*" // Specify the accepted file types (e.g., images)
-    style={{ display: 'none' }}
-//    onChange={handleImageChange}
-    />
+   <VisuallyHiddenInput type="file" accept="image/*" capture="environment" onChange={(e) => setImage(e.target.files)} /> 
    </IconButton>
    </Box>
 
@@ -201,7 +188,7 @@ const NDespesaMobile = () => {
    {/* BOTÃO DE SALVAR NOVA DESPESA */}
    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
    <Button
-   onClick={() => navigate(':id/despesas')}
+   onClick={() => history.back()}
    size="large" 
    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
    Voltar
