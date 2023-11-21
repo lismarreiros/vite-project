@@ -6,6 +6,7 @@ export interface IListagemDespesas {
     descricao: string;
     valor: number;
     data: Date;
+    imagem: string;
     viagemId: number;
     categoriaId: number;
 }
@@ -15,6 +16,7 @@ interface INovaDespesa {
     descricao: string;
     valor: number;
     data: Date;
+    viagemId: number;
     categoriaId: string;
 }
 
@@ -28,7 +30,8 @@ const getAll = async (id: number, page = 1, filter= ''): Promise<TDespesasComTot
         const urlRelativa = `${id}/despesas?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
         
         const { data, headers } = await Api().get(urlRelativa);
-
+        console.log(data);
+        
         if (data) {
             return {
                 data,
@@ -46,7 +49,6 @@ const getAll = async (id: number, page = 1, filter= ''): Promise<TDespesasComTot
 const getById = async (id: number ): Promise<TDespesasComTotalCount | Error> => {
     try {
         const { data, headers } = await Api().get(`${id}/despesas/`)
-      
         if (data) {
             return {
                 data,
@@ -61,20 +63,32 @@ const getById = async (id: number ): Promise<TDespesasComTotalCount | Error> => 
     }
 }
 
-const create = async (dados: Omit<INovaDespesa, 'id'>): Promise<number | Error> => {
+const create = async (dados: Omit<INovaDespesa, 'id'>, imagem: File): Promise<number | Error> => {
     try {
-        const { data } = await Api().post<INovaDespesa>(`/despesas/`, dados);
-        
-        if (data) {
-          return data.id;
-        }
-
-        return new Error('Erro ao criar os registros.')
+      const formData = new FormData();
+      formData.append('descricao', dados.descricao);
+      formData.append('valor', String(dados.valor));
+      formData.append('data', dados.data.toISOString()); // ou utilize algum formato específico
+      formData.append('viagemId', String(dados.viagemId));
+      formData.append('categoriaId', String(dados.categoriaId));
+      formData.append('imagem', imagem);
+  
+      const { data } = await Api().post<INovaDespesa>('/despesas/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (data) {
+        return data.id;
+      }
+  
+      return new Error('Erro ao criar os registros.');
     } catch (error) {
-        console.error(error);
-        return new Error((error as { message: string }).message || 'Erro ao criar os registros.')
+      console.error(error);
+      return new Error((error as { message: string }).message || 'Erro ao criar os registros.');
     }
-}
+  };
 
 const updateById = async (id: number, dados: IListagemDespesas): Promise<void | Error> => {
     try {
