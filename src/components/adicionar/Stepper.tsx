@@ -29,22 +29,22 @@ const handleNext = () => {
 const isLastStep = activeStep === items.length - 1;
 
 return (
-<Box  sx={{
- width: 600,
- height: 560,
- display: 'flex',
- alignItems: 'center',
- backgroundColor: 'white',
- overflow: 'hidden',
- borderRadius: '12px',
- boxShadow: 1,
- fontWeight: 'bold',
- margin: "20px auto",
- marginTop: 20,
- paddingTop: 10,
- paddingBottom: 5,
- paddingRight: 5,
- paddingLeft: 5
+<Box  sx={{ 
+  width: 600,
+  height: 560,
+  display: 'flex',
+  alignItems: 'center',
+  backgroundColor: 'white',
+  overflow: 'hidden',
+  borderRadius: '12px',
+  boxShadow: 1,
+  fontWeight: 'bold',
+  margin: "20px auto",
+  marginTop: 20,
+  paddingTop: 10,
+  paddingBottom: 5,
+  paddingRight: 5,
+  paddingLeft: 5
 }}>
         
 <Box sx={{
@@ -76,7 +76,7 @@ return (
 
  <Box>
  {isLastStep ? (
- <Button 
+  <Button 
    key="enviar" 
    type="submit"
    variant="contained"

@@ -41,6 +41,7 @@ export default function DetalhesWeb () {
 // called use trip expenses hook
   const { expenses, loadingExpenses } = UseTripExpenses(id || '0');
 
+
   useEffect(() => {
 
     debounce(() => {
@@ -126,7 +127,10 @@ export default function DetalhesWeb () {
   {/* abrir o modal */}
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload();
+  };
  
 
   // states to open modal attachments
@@ -317,13 +321,26 @@ return (
     
     <TableCell>
       {/* renderizar o ícone apenas se o id não for 100 ou 101 (Hotel e Transporte) */}
-      {(row.id !== 100 && row.id !== 101) && (
+      {row.id === 100 || row.id === 101 ? (
       <IconButton 
-      onClick={() => handleDeleteDespesa(Number(row.id))}
-      aria-label="expand row" size="small" color="error">
+         aria-label="expand row"
+         size="large"
+         color="error"
+         disabled
+      >
         <RemoveCircle/>
       </IconButton>
-      )} 
+      ) : (
+      <IconButton 
+        onClick={() => {handleDeleteDespesa(Number(row.id))
+        window.location.reload()}}
+        aria-label="expand row"
+        size="large"
+        color="error"
+      >
+        <RemoveCircle/>
+      </IconButton> 
+      )}
     </TableCell>
 
     <TableCell sx={{ color: '#8D8D99'}} component="th" scope="row">{row.descricao}</TableCell>
@@ -332,15 +349,22 @@ return (
     <TableCell sx={{ color: '#8D8D99'}} align="left">{formatCurrency(row.valor)}</TableCell>
 
     <TableCell sx={{ color: '#8D8D99'}} align="left"> 
-      <IconButton
-        sx={{ backgroundColor: '#CADCF8', color: '#0065FF'}}
-        onClick={() => {
-          handleOpenAttachment()
-          setAttachment(row.imagem)
-        }}  
-      >  
-        <AttachFile/>
-      </IconButton>
+    <IconButton
+     aria-label="expand row"
+     size="small"
+     sx={{ color: '#0065FF' }}
+     onClick={() => {
+       handleOpenAttachment();
+       if (row.id === 101) {
+       setAttachment(card?.imagemTrans);
+       } else if (row.id === 100) {
+       setAttachment(card?.imagemHotel);
+       } else {
+       setAttachment(row.imagem);
+      }}}
+    >
+      <AttachFile />
+    </IconButton>
     </TableCell>
     </TableRow>
     )))}
@@ -393,7 +417,7 @@ return (
   {/* formulário para adicionar uma nova despesa */}
   <Box sx={{ display: 'flex', justifyContent: 'center'}}>
 
-  <NovaDespesaForm/>
+  <NovaDespesaForm onClose={handleClose} />
   
   </Box>
     

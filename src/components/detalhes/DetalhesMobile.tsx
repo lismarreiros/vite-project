@@ -2,17 +2,14 @@ import { IconButton, Stack, Typography, Box, CardContent, Card, Divider, Modal  
 import { DeleteOutline, ShareOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
 AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pending, Payments } from '@mui/icons-material';
 
-
 import { useNavigate, useParams } from "react-router-dom";
 import{ useState, useEffect } from "react";
-
 
 import { useDebounce } from "../../../shared/hooks/UseDebounce";
 import UseTripExpenses from "../../../shared/hooks/UseTripExpenses";
 import { NavBar } from '../layouts/Navbar';
 import { ViagensService, IListagemViagem } from "../../../services/api/viagens/ViagensService";
 import { DespesasService } from '../../../services/api/despesas/DespesasService';
-
 
 
 const DetalhesMobile = () => {
@@ -80,10 +77,13 @@ const DetalhesMobile = () => {
   }
  
   // states to open modal attachments
+  type AttachmentType = string | { imagemTrans?: string; imagemHotel?: string };
+
   const [openAttachment, setOpenAttachment] = useState(false);
-  const [attachment, setAttachment] = useState<string>();
+  const [attachment, setAttachment] = useState<AttachmentType>();
   const handleOpenAttachment = () => setOpenAttachment(true);
   const handleCloseAttachment = () => setOpenAttachment(false);
+  
   const getCategoryIcon = (category : number) => {
     switch (category) {   
       
@@ -239,36 +239,56 @@ const DetalhesMobile = () => {
   {expenses.map((row => (
   <Stack>
     <Card sx={{ height: '87px', backgroundColor: '#FFFFFF', margin: 2, display:'flex', flexDirection: 'row', padding: 2, justifyContent: 'space-evenly'}}>
-     {(row.id !== 100 && row.id !== 101) && (
-      <IconButton 
-      onClick={() => handleDeleteDespesa(Number(row.id))}
-      aria-label="expand row" size="large" color="error">
-        <RemoveCircle/>
-      </IconButton>
-     )}
+      {row.id === 100 || row.id === 101 ? (
+    <IconButton 
+      aria-label="expand row"
+      size="large"
+      color="error"
+      disabled
+    >
+      <RemoveCircle/>
+    </IconButton>
+    ) : (
+    <IconButton 
+      onClick={() => {handleDeleteDespesa(Number(row.id))
+      window.location.reload()}}
+      aria-label="expand row"
+      size="large"
+      color="error"
+    >
+      <RemoveCircle/>
+    </IconButton>
+  )}
       
-      <Box key={row.id} sx={{ display: 'flex', flexDirection: 'row', gap: 2}}>
-        <Box>
-          <Typography variant="subtitle1">{row.descricao}</Typography>
-          <Typography variant="subtitle1">{formatDate(row.data)}</Typography>
-          <Typography>{getCategoryIcon(row.categoriaId) }</Typography>
-        </Box>
+  <Box key={row.id} sx={{ display: 'flex', flexDirection: 'row', gap: 2}}>
+    <Box>
+      <Typography variant="subtitle1">{row.descricao}</Typography>
+      <Typography variant="subtitle1">{formatDate(row.data)}</Typography>
+      <Typography>{getCategoryIcon(row.categoriaId) }</Typography>
+    </Box>
       
-        <Box sx={{ alignSelf: 'center'}}>
-          <Typography>{formatCurrency(row.valor)}</Typography>
-        </Box>
+    <Box sx={{ alignSelf: 'center'}}>
+      <Typography>{formatCurrency(row.valor)}</Typography>
+    </Box>
       
-        <IconButton
-          aria-label="expand row" size="small" 
-          sx={{color:'#0065FF'}}
-          onClick={() => {
-            handleOpenAttachment()
-            setAttachment(row.imagem)
-          }}>
-        <AttachFile/> 
-        </IconButton> 
-      
-      </Box>
+    <IconButton
+     aria-label="expand row"
+     size="small"
+     sx={{ color: '#0065FF' }}
+     onClick={() => {
+       handleOpenAttachment();
+       if (row.id === 101) {
+       setAttachment(card?.imagemTrans);
+       } else if (row.id === 100) {
+       setAttachment(card?.imagemHotel);
+       } else {
+       setAttachment(row.imagem);
+      }}}
+    >
+      <AttachFile />
+    </IconButton>
+
+    </Box>
 
     </Card> 
   </Stack>
@@ -277,16 +297,16 @@ const DetalhesMobile = () => {
 
   {/* modal to expenses attachments */}
   <Modal
-  open={openAttachment}
-  onClose={handleCloseAttachment}
-  aria-labelledby="modal-modal-title"
-  aria-describedby="modal-modal-description"
-  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
->
-  <div>
-    <img src={`http://localhost:3333/images/${attachment}`} />
-  </div>
-</Modal>
+    open={openAttachment}
+    onClose={handleCloseAttachment}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+    >
+    <div>
+      <img src={`http://localhost:3333/images/${attachment}`} />
+    </div>
+  </Modal>
 </div>
 )}
 

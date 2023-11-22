@@ -1,4 +1,4 @@
-import { Box, Grid, styled, Typography, InputBase, LinearProgress, Pagination } from '@mui/material';
+import { Box, Grid, styled, Typography, InputBase, Pagination } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { Search } from '@mui/icons-material';
 
@@ -74,7 +74,6 @@ export default function Viagens() {
   const { debounce } = useDebounce();
 
   const [card, setCard] = useState<IListagemViagem[]>([]);
-  const [ isLoading, setIsLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
 
   const busca = useMemo(() => {
@@ -86,13 +85,10 @@ export default function Viagens() {
   }, [searchParams]);
  
   useEffect(() => {
-
-    setIsLoading(true);
     
     debounce(() => {
       ViagensService.getAll(pagina, busca)
       .then((result) => {
-        setIsLoading(false);
 
         if (result instanceof Error) {
           alert(result.message)
@@ -172,9 +168,7 @@ export default function Viagens() {
 )}
 
   <footer>
-    {isLoading && (
-      <LinearProgress variant='indeterminate'/>
-    )}
+ 
     
     {(totalCount > 0 && totalCount > Enviroment.LIMITE_DE_LINHAS) && (
       <Pagination sx={{ mx: 'auto', width: 200, marginBottom: 1 }} 

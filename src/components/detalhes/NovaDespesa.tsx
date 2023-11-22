@@ -1,14 +1,13 @@
-import { FormControl, FormLabel, styled, FormControlLabel, RadioGroup, Button, InputLabel, OutlinedInput, InputAdornment, TextField, Box, Radio, Typography } from '@mui/material';
+import { FormControl, FormLabel, ListItemText, styled, Avatar, FormControlLabel, RadioGroup, Button, InputLabel, OutlinedInput, InputAdornment, TextField, Box, Radio, Typography, List, ListItem, ListItemAvatar } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CloudUpload } from '@mui/icons-material';
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-//import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import { Image } from '@mui/icons-material';
 
 import { DespesasService } from '../../../services/api/despesas/DespesasService';
 import { useState } from 'react';
@@ -44,7 +43,7 @@ const VisuallyHiddenInput = styled('input')({
 
   type FormDespesas =  z.infer<typeof schema>;
 
-  const NovaDespesaForm = () => {
+  const NovaDespesaForm = ({ onClose }) => {
   const { id } = useParams(); 
   const { control, 
     handleSubmit, 
@@ -55,14 +54,8 @@ const VisuallyHiddenInput = styled('input')({
   });
 
   const [image, setImage] = useState<FileList | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  
-  const handleSubmitAndCloseModal = async () => {
-     handleSubmit(createDespesa);
-    setIsModalOpen(false);
-  }
-  
+
   function createDespesa(data: any) {
     const despesa = {
       viagemId: Number(id),
@@ -87,8 +80,9 @@ const VisuallyHiddenInput = styled('input')({
     
   <form onSubmit={(e) => {
     e.preventDefault();
-    handleSubmit(createDespesa)(e) }}>
-  <FormControl sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 3}}>
+    handleSubmit(createDespesa)(e)
+    onClose(); }}>
+  <FormControl sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 2}}>
       
   {/* INPUT TEXTO - DESCRIÇÃO */}
   <Controller
@@ -171,14 +165,26 @@ const VisuallyHiddenInput = styled('input')({
    sx={{ width: '206px', height: '56px', marginTop: 2, backgroundColor: '#0065FF'}}
    component="label" variant="contained" startIcon={<CloudUpload />}>
    Upload file
-    <VisuallyHiddenInput type="file" accept="image/*" capture="environment" onChange={(e) => setImage(e.target.files)} /> 
+    <VisuallyHiddenInput type="file" accept="image/*" capture="environment" onChange={(e) => setImage(e.target.files)}/> 
    </Button>
+
+   {image && (
+    <List>
+    <ListItem>
+    <ListItemAvatar>
+    <Avatar>
+     <Image />
+    </Avatar>
+    </ListItemAvatar>
+    <ListItemText primary="Imagem" secondary={Array.from(image).map(file => file.name).join(', ')} />
+    </ListItem>
+    </List>
+    )} 
  
   {/* BOTÃO DE SALVAR NOVA DESPESA */}
   
   <Box sx={{ alignSelf:'flex-end', marginTop: 2}}>
     <Button
-      onClick={handleSubmitAndCloseModal}
       type="submit"
       size="large" 
       sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>

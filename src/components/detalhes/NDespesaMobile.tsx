@@ -1,13 +1,13 @@
-import { FormControl, InputLabel, TextField, OutlinedInput, Box, InputAdornment, FormLabel, FormControlLabel, Radio, RadioGroup, IconButton, styled, Button, Typography } from "@mui/material";
+import { FormControl, InputLabel, TextField, OutlinedInput, Box, InputAdornment, FormLabel, FormControlLabel, Radio, RadioGroup, IconButton, styled, Button, Typography, List, ListItem, ListItemAvatar, ListItemText, Avatar } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ImageOutlined, RemoveCircle, CameraAltOutlined } from "@mui/icons-material";
+import { ImageOutlined, RemoveCircle, Image } from "@mui/icons-material";
 import { NavBar } from "../layouts/Navbar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DespesasService } from "../../../services/api/despesas/DespesasService";
 
 
@@ -61,7 +61,7 @@ const NDespesaMobile = () => {
   })
 
   const { id  } = useParams<'id'>();
-
+  const navigate = useNavigate();
   const [image, setImage] = useState<FileList | null>(null);
   
   function createDespesa(data: any) {
@@ -77,6 +77,7 @@ const NDespesaMobile = () => {
       DespesasService.create(despesa, image[0])
       .then(response => {
         console.log('Despesa criada', response);
+        navigate(-1)
       })
       .catch(error => {
         console.error('Error', error);
@@ -167,13 +168,7 @@ const NDespesaMobile = () => {
 
   {/* INPUT DE IMAGEM/ARQUIVOS */}
    <Box sx={{alignSelf: 'flex-end'}}>
-   <IconButton
-      sx={{ color: "#0065FF", boxShadow: 1, backgroundColor: "#CADCF8", 
-      '& .MuiIconButton-root:hover' : {
-      backgroundColor: "#CADCF8" }}}
-      component="label">
-      <CameraAltOutlined />
-    </IconButton>
+
    
    <IconButton
    sx={{ color: "#0065FF", backgroundColor: "#CADCF8", boxShadow: 1, marginLeft: 2 }}
@@ -182,6 +177,20 @@ const NDespesaMobile = () => {
    <VisuallyHiddenInput type="file" accept="image/*" capture="environment" onChange={(e) => setImage(e.target.files)} /> 
    </IconButton>
    </Box>
+
+   
+   {image && (
+    <List>
+    <ListItem>
+    <ListItemAvatar>
+    <Avatar>
+     <Image />
+    </Avatar>
+    </ListItemAvatar>
+    <ListItemText primary="Imagem" secondary={Array.from(image).map(file => file.name).join(', ')} />
+    </ListItem>
+    </List>
+    )} 
 
    
 

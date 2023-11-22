@@ -12,6 +12,8 @@ export interface IListagemViagem {
     valorHotel: number;
     adiantamento: number;
     adiantData: Date;
+    imagemTrans: string;
+    imagemHotel: string;
 }
 
 export interface IDetalheViagem {

@@ -41,7 +41,7 @@ export default function CardViagem({ viagem }: CardViagemProps) {
 return (
   <>
 
-  <Card key={viagem.id} sx={{ width: '706px', height: '110px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', padding: 1 }}>
+  <Card  key={viagem.id} sx={{ width: '706px', height: '110px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 1 }}>
   
   <Box>
   
@@ -49,9 +49,9 @@ return (
  
    {/* ID E DESTINO */} 
 
-    <Box sx={{ display:'flex', flexDirection: 'row', gap: 1, justifyContent: 'space-evenly'}}>
+    <Box sx={{ display:'flex', flexDirection: 'row', gap: 1, justifyContent: 'space-evenly', marginBottom: 1 }}>
         
-        <Typography sx={{ fontSize: 12 }} color="inherit" gutterBottom>{viagem.id}</Typography>
+        <Typography sx={{ fontSize: 18 }} color="inherit" gutterBottom>{viagem.id}</Typography>
         <br/>
         <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, justifyContent: 'center', alignItems: 'center'}}>
           <LocationOn fontSize="small" sx={{color:'#7C7C8A'}}/>
@@ -60,7 +60,7 @@ return (
 
      {/* DATA DE IDA E VOLTA */}
   
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, marginLeft: 2}}>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, marginLeft: 2, justifyContent: 'center', alignItems: 'center'}}>
         
         <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, justifyContent: 'center', alignItems: 'center'}}>
           <CalendarMonth fontSize="small" sx={{color:'#7C7C8A'}}/>
@@ -79,11 +79,6 @@ return (
     </Box>
 
     {/* DATA DA POSTAGEM */}
- 
-    <Typography variant="body2" color="text.secondary">
-      <br/>
-      {'Postado há 12 dias'}
-    </Typography>
   
 </CardContent>
 

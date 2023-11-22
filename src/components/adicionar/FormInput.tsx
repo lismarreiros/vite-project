@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Controller, useFormContext } from "react-hook-form";
-import { CloudUpload, CameraAltOutlined, ImageOutlined } from "@mui/icons-material";
+import { CloudUpload, ImageOutlined } from "@mui/icons-material";
 
 type FormInputProps = {
   name: string;
@@ -99,33 +99,25 @@ return (
   {type === 'image' && ( 
     <div>
     {isMobile ? (
-    <Box sx={{ display: 'flex', gap: 1, flexDirection: 'row-reverse'}}>
-       
-      <IconButton
-      sx={{ color: "#0065FF", boxShadow: 1, backgroundColor: "#CADCF8", 
-      '& .MuiIconButton-root:hover' : {
-      backgroundColor: "#CADCF8" }}}
-      component="label">
-      <CameraAltOutlined />
-      </IconButton>
-        
-      <IconButton
-      sx={{ color: "#0065FF", backgroundColor: "#CADCF8", boxShadow: 1 }}
-      component="label">
-      <ImageOutlined />
-      <VisuallyHiddenInput type="file" accept="image/*" capture="environment" onChange={onChangeUploadImage} />
-      </IconButton>
+      <Box sx={{ display: 'flex', flexDirection: 'row-reverse'}}> 
+        <IconButton
+          sx={{ color: "#0065FF", backgroundColor: "#CADCF8", boxShadow: 1 }}
+          component="label">
+          <ImageOutlined />
+        <VisuallyHiddenInput type="file" accept="image/*" capture="environment" onChange={onChangeUploadImage} />
+        </IconButton>
       </Box>
+
     ) : (
-        
+
     <Button
-    sx={{ width: 190, height: 50, gap: 1 }}
-    size="medium"
-    component="label"
-    variant="contained">
-    <CloudUpload />
-    Upload File
-    <VisuallyHiddenInput type="file" onChange={onChangeUploadImage} />
+      sx={{ width: 170, height: 50, gap: 1 }}
+      size="medium"
+      component="label"
+      variant="contained">
+      <CloudUpload />
+        Upload File
+      <VisuallyHiddenInput type="file" onChange={onChangeUploadImage} />
     </Button>)}
     </div>
   )}

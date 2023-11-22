@@ -58,9 +58,9 @@ export default function CardMobile({ viagem }: CardViagemProps) {
     
     {/* ID E DESTINO */}  
 
-    <Box sx={{ display:'flex', flexDirection: 'column'}}>
+    <Box sx={{ display:'flex', flexDirection: 'column', gap: 1}}>
       
-      <Typography sx={{ fontSize: 12, marginBottom: 0.55 }} color="inherit" >{viagem.id} </Typography>
+      <Typography sx={{ fontSize: 14, marginBottom: 0.55 }} color="inherit" >{viagem.id} </Typography>
         
         <Box sx={{  display:'flex', flexDirection: 'row', gap:0.25, alignItems: 'center'}}>
           <LocationOn fontSize="small" sx={{color:'#7C7C8A'}}/>
@@ -71,14 +71,14 @@ export default function CardMobile({ viagem }: CardViagemProps) {
     
     <Box sx={{display: 'flex', flexDirection: 'row', gap: 1}}>
     
-      <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center'}}>
+      <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center', justifyContent: 'center'}}>
         <CalendarMonth fontSize="small" sx={{color:'#7C7C8A'}}/>
         <Typography component="span" variant="subtitle2" color="text.secondary">{formatDate(viagem.dataIda)}</Typography>
       </Box>
 
       <SyncAlt sx={{color:'#7C7C8A'}} />
 
-      <Box sx={{  display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center',}}>
+      <Box sx={{ display:'flex', flexDirection: 'row', gap: 0.25, alignItems: 'center', justifyContent: 'center'}}>
         <CalendarMonth fontSize="small" sx={{color:'#7C7C8A'}}/>
         <Typography component='span' variant="subtitle2" color="text.secondary">{formatDate(viagem.dataVolta)}</Typography>
       </Box>
@@ -87,11 +87,6 @@ export default function CardMobile({ viagem }: CardViagemProps) {
     </Box>
 
     {/* DATA DA POSTAGEM */}
-    
-    <Typography variant="subtitle2" color="text.secondary">
-    <br/>
-      {'Postado há 12 dias'}
-    </Typography>
   
   </CardContent>
 
