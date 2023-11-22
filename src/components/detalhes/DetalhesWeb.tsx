@@ -127,12 +127,14 @@ export default function DetalhesWeb () {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+ 
 
   // states to open modal attachments
   const [openAttachment, setOpenAttachment] = useState(false);
   const [attachment, setAttachment] = useState<string>();
   const handleOpenAttachment = () => setOpenAttachment(true);
   const handleCloseAttachment = () => setOpenAttachment(false);
+
 
   {/* funçao para formatar o número para valor monetário */}
   const formatCurrency = (value: number) => {
@@ -310,13 +312,11 @@ return (
    
     {expenses.map((row => (
     <TableRow 
-    key={row.id}
-    sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor:'#FFFFFF', boxShadow: 0.75, borderRadius: 0, color: '#8D8D99' }}>
+      key={row.id}
+      sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor:'#FFFFFF', boxShadow: 0.75, borderRadius: 0, color: '#8D8D99' }}>
     
     <TableCell>
-      {/**
-       * renderizar o ícone apenas se o id não for 100 ou 101 (Hotel e Transporte)
-       */}
+      {/* renderizar o ícone apenas se o id não for 100 ou 101 (Hotel e Transporte) */}
       {(row.id !== 100 && row.id !== 101) && (
       <IconButton 
       onClick={() => handleDeleteDespesa(Number(row.id))}
@@ -369,7 +369,7 @@ return (
   onClose={handleCloseAttachment}
   aria-labelledby="modal-modal-title"
   aria-describedby="modal-modal-description"
-  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+  sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}
 >
   <div>
     <img src={`http://localhost:3333/images/${attachment}`} />

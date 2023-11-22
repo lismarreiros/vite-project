@@ -4,13 +4,14 @@ import { FormInput } from "../FormInput";
 import { useState } from "react";
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 
-export const Hospedagem = () => {
+export const Hospedagem = ({onImageUpload}: { onImageUpload: (file: File, imageType: string) => void} ) => {
   const [uploadedFile, setUploadedFile] = useState("");
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
   const file = event.target.files?.[0];
   if (file) {
   setUploadedFile(file.name);
+  onImageUpload(file, 'imagemHotel');
   }
   };
 

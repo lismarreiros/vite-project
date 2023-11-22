@@ -188,15 +188,15 @@ const NDespesaMobile = () => {
    {/* BOTÃO DE SALVAR NOVA DESPESA */}
    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5}}>
    <Button
-   onClick={() => history.back()}
-   size="large" 
-   sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
-   Voltar
+    onClick={() => history.back()}
+    size="large" 
+    sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
+    Voltar
    </Button>
    <Button 
-   onClick={handleSubmit(createDespesa)}
-   type="submit" size="large"  sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
-   Salvar
+    onClick={handleSubmit(createDespesa)}
+    type="submit" size="large"  sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>
+    Salvar
    </Button>
    </Box>
  

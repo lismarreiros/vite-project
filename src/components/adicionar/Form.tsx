@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormProvider, useForm } from "react-hook-form";
-
+import { useState } from 'react';
 import { Destino } from "./stepcomponents/Destino";
 import { Transporte } from "./stepcomponents/Transporte";
 import { Hospedagem } from "./stepcomponents/Hospedagem";
@@ -48,8 +48,6 @@ message: 'Informe  um valor.'
 }}})
 .positive({message:'Digite um número válido'}),
 
-//imagemTrans: z.instanceof(FileList).transform(list => list.item(0)),
-
 nomeHotel: z.string().min(1, {message: 'Informe um nome'}),
 
 valorHotel: z.coerce.number({
@@ -58,8 +56,6 @@ return {
 message: 'Informe  um valor.'
 }}}),
 
-//imageHotel: z.instanceof(FileList).transform(list => list.item(0))
-//.optional(),
 
 adiantamento: z.coerce.number({
 errorMap: () => {
@@ -73,46 +69,11 @@ return {
 message: 'Selecione uma data.'
 }}}),
 
-//imageAdia: z.instanceof(FileList).transform(list => list.item(0))
-//.optional(),
+
 
 }).required();
 
 type FormValues =  z.infer<typeof schema>;
-
-const sourceSteps = [{
- label: "Destino",
- fields: ["cidade", "dataIda", "dataVolta"],
- Component: <Destino />,
- hasError: false,
- },
- {
- label: "Transporte",
- fields: ["valorTrans", "categoria", "imagemTrans"],
- Component: <Transporte />,
- hasError: false,
- },
- {
- label: "Hospedagem",
- fields: ["nomeHotel", "valorHotel", "imageHotel"],
- Component: <Hospedagem />,
- hasError: false,
- },
- {
- label:"Adiantamento",
- fields: ["valorAdia", "dataAdia", "imageAdia"],
- Component: <Adiantamento />,
- hasError: false,
-},
-];
-
-const getSteps = (errors: string[]) => {
-  return sourceSteps.map((step) => {
-  return {
-  ...step,
-  hasError: errors.some((error) => step.fields.includes(error)),};
-  });
-};
 
 
 const Form = () => {
@@ -134,6 +95,58 @@ const Form = () => {
   },
   });
 
+  const [images, setImages] = useState({
+    imagemTrans: null,
+    imagemHotel: null,
+    adiantImagem: null,
+  });
+  
+  const handleImageUpload = (file: File, imageType: string) => {
+    // Do something with the uploaded file in the parent component
+    console.log(`Uploaded ${imageType} file:`, file);
+  
+    // Update the state with the uploaded image
+    setImages(prevImages => ({
+      ...prevImages,
+      [imageType]: file,
+    }));
+  };
+  
+  const sourceSteps = [{
+   label: "Destino",
+   fields: ["cidade", "dataIda", "dataVolta"],
+   Component: <Destino />,
+   hasError: false,
+   },
+   {
+   label: "Transporte",
+   fields: ["valorTrans", "categoria", "imagemTrans"],
+   Component: <Transporte onImageUpload={handleImageUpload} />,
+   hasError: false,
+   },
+   {
+   label: "Hospedagem",
+   fields: ["nomeHotel", "valorHotel", "imageHotel"],
+   Component: <Hospedagem onImageUpload={handleImageUpload}/>,
+   hasError: false,
+   },
+   {
+   label:"Adiantamento",
+   fields: ["adiantamento", "adiantData", "adiantImagem"],
+   Component: <Adiantamento onImageUpload={handleImageUpload}/>,
+   hasError: false,
+  },
+  ];
+  
+  const getSteps = (errors: string[]) => {
+    return sourceSteps.map((step) => {
+    return {
+    ...step,
+    hasError: errors.some((error) => step.fields.includes(error)),};
+    });
+  };
+  
+
   if (methods.formState.isSubmitSuccessful) {
     return (
       <Box sx={{margin: 3}}>   
@@ -150,16 +163,17 @@ const Form = () => {
  
 
   function createViagem(data: FormValues) {
-
-    ViagensService.create(data)
-    .then(response => {
-      // Handle the response as needed
-      console.log('Viagem criada', response);
-    })
-    .catch(error => {
-      // Handle the error
-      console.error('Error', error);
-    });
+    if (images.imagemTrans && images.imagemHotel && images.adiantImagem) {
+      ViagensService.create(data, images.imagemTrans, images.imagemHotel, images.adiantImagem)
+      .then(response => {
+        // Handle the response as needed
+        console.log('Viagem criada', response);
+      })
+      .catch(error => {
+        // Handle the error
+        console.error('Error', error);
+      });
+    }
   }
 
   return( 

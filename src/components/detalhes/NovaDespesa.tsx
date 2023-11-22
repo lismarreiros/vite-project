@@ -55,6 +55,13 @@ const VisuallyHiddenInput = styled('input')({
   });
 
   const [image, setImage] = useState<FileList | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  
+  const handleSubmitAndCloseModal = async () => {
+     handleSubmit(createDespesa);
+    setIsModalOpen(false);
+  }
   
   function createDespesa(data: any) {
     const despesa = {
@@ -80,8 +87,7 @@ const VisuallyHiddenInput = styled('input')({
     
   <form onSubmit={(e) => {
     e.preventDefault();
-    handleSubmit(createDespesa)(e);
-  }}>
+    handleSubmit(createDespesa)(e) }}>
   <FormControl sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 3}}>
       
   {/* INPUT TEXTO - DESCRIÇÃO */}
@@ -172,6 +178,7 @@ const VisuallyHiddenInput = styled('input')({
   
   <Box sx={{ alignSelf:'flex-end', marginTop: 2}}>
     <Button
+      onClick={handleSubmitAndCloseModal}
       type="submit"
       size="large" 
       sx={{backgroundColor: '#CADCF8', color: '#5497FD', padding: 1.5, width: '100px', height: '34px'}}>

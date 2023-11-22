@@ -1,17 +1,20 @@
 import Box from "@mui/material/Box";
 import { FormInput } from "../FormInput";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import { Image } from '@mui/icons-material';
 
-export const Transporte = () => {
+
+export const Transporte = ({ onImageUpload }: { onImageUpload: (file: File, imageType: string) => void}) => {
   const [uploadedFile, setUploadedFile] = useState("");
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    setUploadedFile(file.name);
-  }
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedFile(file.name);
+      // Call the callback function to send the file to the parent component
+      onImageUpload(file, 'imagemTrans');
+    }
   };
 
   return (
