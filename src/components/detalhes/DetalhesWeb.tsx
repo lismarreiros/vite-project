@@ -96,7 +96,6 @@ export default function DetalhesWeb () {
       })
     }
   }
-    
 
   {/* ícones da categoria */}
   const getCategoryIcon = (category : number) => {

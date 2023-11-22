@@ -1,4 +1,4 @@
-import { IconButton, Stack, Typography, Box, CardContent, Card, Divider,  } from '@mui/material';
+import { IconButton, Stack, Typography, Box, CardContent, Card, Divider, Modal  } from '@mui/material';
 import { DeleteOutline, ShareOutlined, FmdGoodOutlined, CalendarMonthOutlined, AddCircle, 
 AttachFile, RemoveCircle, Hotel, Restaurant, DirectionsBus, DirectionsCar, Pending, Payments } from '@mui/icons-material';
 
@@ -11,6 +11,7 @@ import { useDebounce } from "../../../shared/hooks/UseDebounce";
 import UseTripExpenses from "../../../shared/hooks/UseTripExpenses";
 import { NavBar } from '../layouts/Navbar';
 import { ViagensService, IListagemViagem } from "../../../services/api/viagens/ViagensService";
+import { DespesasService } from '../../../services/api/despesas/DespesasService';
 
 
 
@@ -65,8 +66,24 @@ const DetalhesMobile = () => {
     }
   }
 
-
-  
+  const handleDeleteDespesa = (id: number) => {
+    if (confirm('Realmente dejesa apagar?')) {
+      DespesasService.deletebyId(id)
+      .then(result => {
+        if (result instanceof Error) {
+          alert(result.message)
+        } else {
+          alert('Registro apagado com sucesso!');
+        }
+      })
+    }
+  }
+ 
+  // states to open modal attachments
+  const [openAttachment, setOpenAttachment] = useState(false);
+  const [attachment, setAttachment] = useState<string>();
+  const handleOpenAttachment = () => setOpenAttachment(true);
+  const handleCloseAttachment = () => setOpenAttachment(false);
   const getCategoryIcon = (category : number) => {
     switch (category) {   
       
@@ -211,21 +228,24 @@ const DetalhesMobile = () => {
  
   
   {/* CUSTOS */}
+ 
   <Box sx={{display:'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 3, paddingBottom: 2}}>
   <Typography variant="subtitle1"   sx={{ fontWeight: 'bold',  color: '#3C3C3C'}}>Custos</Typography>
     <IconButton onClick={() => navigate(`novadespesa`)} size="small" sx={{backgroundColor: '#CADCF8', color: '#5497FD'}}>
       <AddCircle /> 
     </IconButton>
   </Box>
-
+  
   {expenses.map((row => (
   <Stack>
     <Card sx={{ height: '87px', backgroundColor: '#FFFFFF', margin: 2, display:'flex', flexDirection: 'row', padding: 2, justifyContent: 'space-evenly'}}>
-    
-      <IconButton aria-label="expand row" size="large" color="error">
+     {(row.id !== 100 && row.id !== 101) && (
+      <IconButton 
+      onClick={() => handleDeleteDespesa(Number(row.id))}
+      aria-label="expand row" size="large" color="error">
         <RemoveCircle/>
       </IconButton>
-    
+     )}
       
       <Box key={row.id} sx={{ display: 'flex', flexDirection: 'row', gap: 2}}>
         <Box>
@@ -238,13 +258,35 @@ const DetalhesMobile = () => {
           <Typography>{formatCurrency(row.valor)}</Typography>
         </Box>
       
-        <IconButton aria-label="expand row" size="small" sx={{ color: '#0065FF'}}> <AttachFile/> </IconButton> 
+        <IconButton
+          aria-label="expand row" size="small" 
+          sx={{color:'#0065FF'}}
+          onClick={() => {
+            handleOpenAttachment()
+            setAttachment(row.imagem)
+          }}>
+        <AttachFile/> 
+        </IconButton> 
       
       </Box>
 
     </Card> 
   </Stack>
   )))}
+
+
+  {/* modal to expenses attachments */}
+  <Modal
+  open={openAttachment}
+  onClose={handleCloseAttachment}
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+>
+  <div>
+    <img src={`http://localhost:3333/images/${attachment}`} />
+  </div>
+</Modal>
 </div>
 )}
 

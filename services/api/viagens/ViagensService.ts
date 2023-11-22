@@ -66,9 +66,27 @@ const getById = async (id: number): Promise<IListagemViagem | Error> => {
     }
 }
 
-const create = async (dados: Omit<IDetalheViagem, 'id'>): Promise<number | Error> => {
+const create = async (dados: Omit<IDetalheViagem, 'id'>, imagemTrans: File, imagemHotel: File, adiantImagem: File): Promise<number | Error> => {
     try {
-        const { data } = await Api().post<IDetalheViagem>('/viagens', dados);
+        const formData = new FormData();
+        formData.append('cidade', dados.cidade);
+        formData.append('dataIda', dados.dataIda.toISOString());
+        formData.append('dataVolta', dados.dataVolta.toISOString());
+        formData.append('categoriaT', String(dados.categoriaT));
+        formData.append('valorTrans', String(dados.valorTrans));
+        formData.append('imagemTrans', imagemTrans);
+        formData.append('nomeHotel', dados.nomeHotel);
+        formData.append('valorHotel', String(dados.valorHotel));
+        formData.append('imagemHotel', imagemHotel);
+        formData.append('adiantamento', String(dados.adiantamento));
+        formData.append('adiantData', dados.adiantData.toISOString());
+        formData.append('adiantImagem', adiantImagem);
+
+        const { data } = await Api().post<IDetalheViagem>('/viagens', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         
         if (data) {
           return data.id;
