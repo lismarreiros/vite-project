@@ -150,7 +150,7 @@ const Form = () => {
   if (methods.formState.isSubmitSuccessful) {
     return (
       <Box sx={{margin: 3}}>   
-      <Alert variant='solid' color="success">
+      <Alert variant='solid' color="success" sx={{ width: 300}}>
         Success
       </Alert>
       <Button onClick={() => navigate('/viagens')}>
