@@ -14,6 +14,7 @@ import { Steps } from "./Stepper";
 import { NavBar } from '../layouts/Navbar';
 import { StepsMobile } from './StepperMobile';
 import { ViagensService } from '../../../services/api/viagens/ViagensService';
+import { useAuthContext } from '../../../shared/contexts';
 
 const schema = z.object({
 cidade: z.string().min(1, 'Informe pelo menos uma cidade')
@@ -77,6 +78,7 @@ type FormValues =  z.infer<typeof schema>;
 
 
 const Form = () => {
+  const authContext = useAuthContext();
   const navigate = useNavigate();
   const methods = useForm<FormValues>({
   resolver: zodResolver(schema),
@@ -163,8 +165,9 @@ const Form = () => {
  
 
   function createViagem(data: FormValues) {
+    const userId = authContext.user
     if (images.imagemTrans && images.imagemHotel && images.adiantImagem) {
-      ViagensService.create(data, images.imagemTrans, images.imagemHotel, images.adiantImagem)
+      ViagensService.create(userId, data, images.imagemTrans, images.imagemHotel, images.adiantImagem)
       .then(response => {
         // Handle the response as needed
         console.log('Viagem criada', response);

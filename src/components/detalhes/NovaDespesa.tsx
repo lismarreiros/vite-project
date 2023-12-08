@@ -81,7 +81,7 @@ const VisuallyHiddenInput = styled('input')({
   <form onSubmit={(e) => {
     e.preventDefault();
     handleSubmit(createDespesa)(e)
-    onClose(); }}>
+    }}>
   <FormControl sx={{ display: 'flex', flexDirection: 'column', marginTop: 5, gap: 2}}>
       
   {/* INPUT TEXTO - DESCRIÇÃO */}

@@ -7,6 +7,7 @@ interface IAuthContextData {
   logout: () => void;
   isAuthenticated: boolean;
   login: (email: string, senha: string) => Promise<Error | void>;
+  user: string | undefined;
 }
 
 const AuthContext = createContext({} as IAuthContextData);
@@ -18,6 +19,7 @@ interface IAuthProviderProps {
 }
 export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string>();
+  const [user, setUser] = useState<string>();
 
   useEffect(() => {
     const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN);
@@ -36,20 +38,24 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
       return new Error(result.message)
     } else {
       localStorage.setItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN, JSON.stringify(result.accessToken));
+      localStorage.setItem('user', JSON.stringify(result.id));
       setAccessToken(result.accessToken);
+      setUser(result.id)
     }
   }, []);
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN);
+    localStorage.removeItem("id")
     setAccessToken(undefined);
+    setUser(undefined)
   }, []);
 
   const isAuthenticated = useMemo(() => !!accessToken, [accessToken]);
 
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login: handleLogin, logout: handleLogout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login: handleLogin, logout: handleLogout, user }}>
       {children}
     </AuthContext.Provider>
   );

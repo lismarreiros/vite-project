@@ -26,7 +26,8 @@ export interface IDetalheViagem {
     nomeHotel: string;
     valorHotel: number;
     adiantamento: number;
-    adiantData: Date; 
+    adiantData: Date;
+    userId: string;
 }
 type TViagensComTotalCount = {
     data: IListagemViagem[];
@@ -68,10 +69,16 @@ const getById = async (id: number): Promise<IListagemViagem | Error> => {
     }
 }
 
-const create = async (dados: Omit<IDetalheViagem, 'id'>, imagemTrans: File, imagemHotel: File, adiantImagem: File): Promise<number | Error> => {
+const create = async (
+    dados: Omit<IDetalheViagem, 'id'>, 
+    imagemTrans: File, 
+    imagemHotel: File, 
+    adiantImagem: File,
+    userId: string): Promise<number | Error> => {
     try {
         const formData = new FormData();
         formData.append('cidade', dados.cidade);
+        formData.append('userId', String(userId)); 
         formData.append('dataIda', dados.dataIda.toISOString());
         formData.append('dataVolta', dados.dataVolta.toISOString());
         formData.append('categoriaT', String(dados.categoriaT));
