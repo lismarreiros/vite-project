@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN);
-    localStorage.removeItem("id")
+    localStorage.removeItem("user")
     setAccessToken(undefined);
     setUser(undefined)
   }, []);
