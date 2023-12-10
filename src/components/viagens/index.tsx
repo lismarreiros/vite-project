@@ -83,11 +83,15 @@ export default function Viagens() {
   const pagina = useMemo(() => {
     return Number(searchParams.get('pagina') || '1');
   }, [searchParams]);
- 
+  
+  const userId = useMemo(() => {
+    return searchParams.get('userId') || '';
+  }, [searchParams]);
+  
   useEffect(() => {
     
     debounce(() => {
-      ViagensService.getAll(pagina, busca)
+      ViagensService.getAll(pagina, busca, userId)
       .then((result) => {
 
         if (result instanceof Error) {

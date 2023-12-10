@@ -33,26 +33,26 @@ type TViagensComTotalCount = {
     totalCount: number;
 }
 
-const getAll = async (page = 1, filter= ''): Promise<TViagensComTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', userId = ''): Promise<TViagensComTotalCount | Error> => {
     try {
-        const urlRelativa = `/viagens?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}`;
-        
-        const { data, headers } = await Api().get(urlRelativa);
-
-        if (data) {
-            return {
-                data,
-                totalCount: Number(headers['x-total-count'] || Enviroment.LIMITE_DE_LINHAS),
-            }
-        }
-
-        return new Error('Erro ao listrar os registros')
+      const urlRelativa = `/viagens?page=${page}&limit=${Enviroment.LIMITE_DE_LINHAS}&filter=${filter}&userId=${userId}`;
+  
+      const { data, headers } = await Api().get(urlRelativa);
+  
+      if (data) {
+        return {
+          data,
+          totalCount: Number(headers['x-total-count'] || Enviroment.LIMITE_DE_LINHAS),
+        };
+      }
+  
+      return new Error('Erro ao listar os registros');
     } catch (error) {
-        console.error(error);
-        return new Error((error as {message: string}).message || 'Erro ao listar os registros.');
+      console.error(error);
+      return new Error((error as { message: string }).message || 'Erro ao listar os registros.');
     }
-}
-
+  };
+  
 const getById = async (id: number): Promise<IListagemViagem | Error> => {
     try {
         const { data } = await Api().get(`/viagens/${id}`)
